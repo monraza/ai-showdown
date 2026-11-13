@@ -13,45 +13,56 @@
 <link rel="stylesheet" href="../glass.css?v=1">
 <style>
 html,body{height:100%;overflow:hidden}
+body{display:flex;flex-direction:column;height:100dvh}
 :root{--sonnet:#38c9b4;--opus:#ff9933;--fable:#a58bff}
-/* top bar: one strip of glass over the wallpaper */
-.bar{position:relative;z-index:2;height:52px;display:flex;align-items:center;gap:8px;padding:0 10px;padding-top:env(safe-area-inset-top);background:var(--glass);border-bottom:1px solid var(--hairline);-webkit-backdrop-filter:blur(var(--blur-glass)) saturate(170%);backdrop-filter:blur(var(--blur-glass)) saturate(170%)}
-.back{flex:none}
-.tabs{flex:1;display:flex;justify-content:center;min-width:0}
-.tabs.bx-segmented{flex:0 1 auto;margin:0 auto}
+/* the site header, same as the main page */
+.head{flex:none;padding:calc(env(safe-area-inset-top) + 12px) 12px 0}
+header.top{max-width:1080px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 8px 8px 10px;background:var(--glass-popover)}
+.brand{display:flex;align-items:center;gap:10px;min-width:0;color:var(--ink);text-decoration:none;font:600 15px/20px var(--font-sans);letter-spacing:-.01em}
+.brand span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+header.top nav{display:flex;align-items:center;gap:4px}
+/* model switch, under the header */
+.models{flex:none;display:flex;justify-content:center;padding:10px 12px}
 .tabs a{height:28px;padding:0 11px}
 .tabs a .bx-dot{width:8px;height:8px}
-/* the scene: always dark behind the canvas, whatever the page theme */
-#stage{position:relative;height:calc(100% - 52px);background:#000}
+/* the scene: always dark behind the canvas */
+#stage{position:relative;flex:1;min-height:0;background:#000}
 #stage iframe{display:block;position:absolute;inset:0;width:100%;height:100%;border:0;background:#000}
 #loading{position:absolute;inset:0;display:grid;place-items:center;color:var(--ink-muted);font:600 13px/18px var(--font-sans);pointer-events:none;transition:opacity .3s}
 #loading.off{opacity:0}
-@media (max-width:420px){.back span,.tabs a .v{display:none}.tabs a{padding:0 9px}.bar{gap:6px;padding:0 8px}}
-/* phones and tablets: one button tucks every control away (this bar and the scene's own panels) and brings them back */
-#ctl{display:none;position:fixed;z-index:10;top:calc(env(safe-area-inset-top) + 9px);right:10px;width:34px;height:34px;padding:0;place-items:center;border-radius:var(--radius-md);border:1px solid var(--edge);background:var(--glass-popover);color:var(--ink);box-shadow:var(--shadow-glass);cursor:pointer;-webkit-tap-highlight-color:transparent;-webkit-backdrop-filter:blur(var(--blur-glass)) saturate(170%);backdrop-filter:blur(var(--blur-glass)) saturate(170%);transition:opacity .2s}
-#ctl svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-#ctl .on{display:none}
-body.min #ctl .off{display:none}
-body.min #ctl .on{display:block}
-body.min #ctl{opacity:.75}
-body.min .bar{display:none}
-body.min #stage{height:100%}
-@media (max-width:820px),(pointer:coarse){#ctl{display:grid}.bar{padding-right:54px}}
+/* phones and tablets: the scene's own controls start hidden; this header button shows them (pressed) and hides them again */
+#ctl{display:none;width:30px;height:30px;padding:0;border:1.5px solid transparent;border-radius:var(--radius-sm);background:var(--fill);color:var(--ink)}
+#ctl svg{width:16px;height:16px}
+#ctl[aria-pressed="true"]{border-color:var(--accent-line);background:var(--accent-wash);color:var(--accent-ink)}
+@media (max-width:820px),(pointer:coarse){#ctl{display:inline-flex}}
+@media (max-width:760px){header.top nav .bx-btn--plain{padding:0 9px}}
+@media (max-width:600px){.brand .long{display:none}}
+@media (max-width:420px){.brand .name,.tabs a .v{display:none}.tabs a{padding:0 10px}}   /* phones: the logo tile alone, so the nav and controls button fit */
 </style>
 </head>
 <body class="bx-page">
-<div class="bar">
-  <a class="back bx-btn" href="./" aria-label="Back to all three"><svg class="bx-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg><span>All 3</span></a>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-arch" viewBox="0 0 24 24"><path d="M6 20V9h12v11M10 20v-5a2 2 0 0 1 4 0v5M4 6h16"/></symbol>
+  <symbol id="i-sliders" viewBox="0 0 24 24"><path d="M4 6h9M17 6h3M4 12h3M11 12h9M4 18h11M19 18h1"/><circle cx="15" cy="6" r="2"/><circle cx="9" cy="12" r="2"/><circle cx="17" cy="18" r="2"/></symbol>
+</svg>
+<div class="head">
+  <header class="top bx-glass">
+    <a class="brand" href="./"><span class="bx-tile bx-tile--attention"><svg class="bx-icon"><use href="#i-arch"/></svg></span><span class="name">India Gate<span class="long"> · AI Showdown</span></span></a>
+    <nav aria-label="Page">
+      <a class="bx-btn bx-btn--plain" href="./#play">Play</a>
+      <a class="bx-btn bx-btn--plain" href="./#prompt">Prompt</a>
+      <a class="bx-btn bx-btn--plain" href="https://x.com/_monisraza" target="_blank" rel="noopener">Follow</a>
+      <button class="bx-btn" id="ctl" type="button" aria-pressed="false" aria-label="Show controls" title="Show controls"><svg class="bx-icon"><use href="#i-sliders"/></svg></button>
+    </nav>
+  </header>
+</div>
+<div class="models">
   <nav class="tabs bx-segmented" aria-label="Choose model">
-    <a href="?m=sonnet" data-m="sonnet" style="--c:var(--sonnet)"><span class="bx-dot" style="background:var(--sonnet)"></span>Sonnet<span class="v"> 5.5</span></a>
-    <a href="?m=opus" data-m="opus" style="--c:var(--opus)"><span class="bx-dot" style="background:var(--opus)"></span>Opus<span class="v"> 5.5</span></a>
-    <a href="?m=fable" data-m="fable" style="--c:var(--fable)"><span class="bx-dot" style="background:var(--fable)"></span>Fable<span class="v"> 5.2</span></a>
+    <a href="?m=sonnet" data-m="sonnet"><span class="bx-dot" style="background:var(--sonnet)"></span>Sonnet<span class="v"> 5.5</span></a>
+    <a href="?m=opus" data-m="opus"><span class="bx-dot" style="background:var(--opus)"></span>Opus<span class="v"> 5.5</span></a>
+    <a href="?m=fable" data-m="fable"><span class="bx-dot" style="background:var(--fable)"></span>Fable<span class="v"> 5.2</span></a>
   </nav>
 </div>
-<button id="ctl" type="button" aria-pressed="false" aria-label="Hide controls" title="Hide controls">
-  <svg class="off" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 14h6v6M20 10h-6V4M14 10l7-7M3 21l7-7"/></svg>
-  <svg class="on" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h9M17 6h3M4 12h3M11 12h9M4 18h11M19 18h1"/><circle cx="15" cy="6" r="2"/><circle cx="9" cy="12" r="2"/><circle cx="17" cy="18" r="2"/></svg>
-</button>
 <div id="stage" class="bx-dark"><div id="loading" role="status">Loading…</div></div>
 <script>
 /* One scene at a time. Switching fully tears down the previous scene before the next one starts:
@@ -100,15 +111,28 @@ async function show(m, push) {
   f.addEventListener('load', () => { if (f !== frame) return; applyMin(f); loading.classList.add('off'); try { f.contentWindow.focus(); } catch (e) {} });
   f.src = m + '/';
   stage.appendChild(f); frame = f;
+  /* hide the panels as soon as the scene's document exists, not only at load. The check runs just before
+     every frame is drawn (the iframe shares this page's rendering), so the panels are never painted on phones. */
+  const early = () => {
+    if (f !== frame) return;
+    try {
+      const d = f.contentDocument;
+      if (d && d.documentElement && d.URL.indexOf('/' + m + '/') !== -1) { applyMin(f); if (d.readyState === 'complete') return; }
+    } catch (e) { return; }
+    requestAnimationFrame(early);
+  };
+  requestAnimationFrame(early);
 }
 
-/* Hide / show controls. The scenes are served from this same site, so a style tag dropped into the
+/* Show / hide controls. The scenes are served from this same site, so a style tag dropped into the
    scene's document hides its panels at runtime; the scene files themselves are never changed.
    All three keep their controls in #ui (Opus also has a #toast); the canvas and loading screens are untouched.
-   The choice carries over when switching models. */
+   Phones and tablets start with the panels hidden and the header button unpressed; pressing it shows them.
+   Desktop always shows them (the button is not shown there). The choice carries over when switching models. */
 const ctl = document.getElementById('ctl');
+const small = matchMedia('(max-width:820px),(pointer:coarse)');
 const MIN_CSS = '#ui,#toast{opacity:0!important;visibility:hidden!important;pointer-events:none!important}';
-let minimized = false;
+let minimized = small.matches;
 function applyMin(f) {
   try {
     const d = f && f.contentDocument; if (!d || !d.documentElement) return;
@@ -118,12 +142,14 @@ function applyMin(f) {
   } catch (e) {}
 }
 function setMin(on) {
-  minimized = on; document.body.classList.toggle('min', on);
+  minimized = on;
   const label = on ? 'Show controls' : 'Hide controls';
-  ctl.setAttribute('aria-pressed', String(on)); ctl.setAttribute('aria-label', label); ctl.title = label;
+  ctl.setAttribute('aria-pressed', String(!on)); ctl.setAttribute('aria-label', label); ctl.title = label;
   applyMin(frame);
 }
+setMin(minimized);
 ctl.onclick = () => { setMin(!minimized); try { frame && frame.contentWindow.focus(); } catch (e) {} };
+small.addEventListener('change', () => setMin(small.matches));   // rotating a tablet, resizing a window
 
 document.querySelectorAll('.tabs a').forEach(a => a.onclick = e => { e.preventDefault(); show(a.dataset.m, true); });
 addEventListener('popstate', () => show(new URLSearchParams(location.search).get('m')));
