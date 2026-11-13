@@ -698,9 +698,16 @@ await nextFrame();
  *  Materials — shared uniform rigs for floodlight + tricolour
  * ------------------------------------------------------------------ */
 const uTime = { value: 0 };
-const gateU = { uFlood: { value: 0 }, uTri: { value: 0 }, uTime, uFloodCol: { value: new THREE.Color(1.0, 0.68, 0.38) }, uTop: { value: 42.5 }, uFC: { value: new THREE.Vector3(0, 0, 0) }, uFR: { value: 24 } };
-const canopyU = { uFlood: { value: 0 }, uTri: { value: 0 }, uTime, uFloodCol: { value: new THREE.Color(1.0, 0.72, 0.45) }, uTop: { value: 24 }, uFC: { value: new THREE.Vector3(0, 0, -66) }, uFR: { value: 13 } };
-const farU = { uFlood: { value: 0 }, uTri: { value: 0 }, uTime, uFloodCol: { value: new THREE.Color(1.0, 0.78, 0.55) }, uTop: { value: 60 }, uFC: { value: new THREE.Vector3(0, 0, 700) }, uFR: { value: 140 } };
+const jyotiShared = {
+  uJyoti: { value: 0 }, uJyotiCol: { value: new THREE.Color(1.0, 0.55, 0.22) },
+  uJP: { value: [new THREE.Vector3(), new THREE.Vector3(), new THREE.Vector3(), new THREE.Vector3()] },
+};
+const noJyoti = { uJyoti: { value: 0 }, uJyotiCol: jyotiShared.uJyotiCol, uJP: jyotiShared.uJP, uJSpec: { value: 0 } };
+const gateU = { uFlood: { value: 0 }, uTri: { value: 0 }, uTime, uFloodCol: { value: new THREE.Color(1.0, 0.68, 0.38) }, uTop: { value: 42.5 }, uFC: { value: new THREE.Vector3(0, 0, 0) }, uFR: { value: 24 }, ...jyotiShared, uJSpec: { value: 0 } };
+const canopyU = { uFlood: { value: 0 }, uTri: { value: 0 }, uTime, uFloodCol: { value: new THREE.Color(1.0, 0.72, 0.45) }, uTop: { value: 24 }, uFC: { value: new THREE.Vector3(0, 0, -66) }, uFR: { value: 13 }, ...noJyoti };
+const farU = { uFlood: { value: 0 }, uTri: { value: 0 }, uTime, uFloodCol: { value: new THREE.Color(1.0, 0.78, 0.55) }, uTop: { value: 60 }, uFC: { value: new THREE.Vector3(0, 0, 700) }, uFR: { value: 140 }, ...noJyoti, uJyoti: { value: 0 }, uJSpec: { value: 0 } };
+// rig for the Amar Jawan Jyoti itself: no flood/tricolour, firelight with specular glints on polished marble
+const jyotiU = { uFlood: { value: 0 }, uTri: { value: 0 }, uTime, uFloodCol: gateU.uFloodCol, uTop: { value: 42.5 }, uFC: { value: new THREE.Vector3() }, uFR: { value: 24 }, ...jyotiShared, uJSpec: { value: 1 } };
 
 const LIT_GLSL = /* glsl */`
 {
@@ -732,6 +739,19 @@ const LIT_GLSL = /* glsl */`
     float fac = (0.5 + 0.5 * sideF + 0.4 * dnF) * (puls + sweep);
     totalEmissiveRadiance += base * band * (uTri * fac * 1.15);
   }
+  // firelight from the four Amar Jawan Jyoti urns (confined to the arch passage)
+  if (uJyoti > 0.001) {
+    float jm = (1.0 - smoothstep(6.5, 10.0, abs(vGW.z))) * (1.0 - smoothstep(6.0, 16.0, abs(vGW.x)));
+    vec3 Vj = normalize(cameraPosition - vGW);
+    float jl = 0.0, js = 0.0;
+    for (int i = 0; i < 4; i++) {
+      vec3 Lj = uJP[i] - vGW; float dj = length(Lj); vec3 Ld = Lj / dj;
+      float att = 1.0 / (dj + 2.5), nl = dot(Nw, Ld);
+      jl += max(nl, 0.0) * att;
+      js += pow(max(dot(Nw, normalize(Ld + Vj)), 0.0), 90.0) * att * step(0.0, nl);
+    }
+    totalEmissiveRadiance += uJyotiCol * (uJyoti * jm) * ((alb + uJSpec * 0.03) * jl * 2.0 + uJSpec * js * 3.0);
+  }
 }`;
 function makeLit(mat, U) {
   mat.onBeforeCompile = (sh) => {
@@ -740,10 +760,10 @@ function makeLit(mat, U) {
       .replace('#include <common>', '#include <common>\nvarying vec3 vGW;\nvarying vec3 vGN;')
       .replace('#include <project_vertex>', '#include <project_vertex>\nvGW = (modelMatrix * vec4(transformed, 1.0)).xyz;\nvGN = normalize(mat3(modelMatrix) * objectNormal);');
     sh.fragmentShader = sh.fragmentShader
-      .replace('#include <common>', '#include <common>\nvarying vec3 vGW;\nvarying vec3 vGN;\nuniform float uFlood;\nuniform float uTri;\nuniform float uTime;\nuniform float uTop;\nuniform vec3 uFloodCol;\nuniform vec3 uFC;\nuniform float uFR;')
+      .replace('#include <common>', '#include <common>\nvarying vec3 vGW;\nvarying vec3 vGN;\nuniform float uFlood;\nuniform float uTri;\nuniform float uTime;\nuniform float uTop;\nuniform vec3 uFloodCol;\nuniform vec3 uFC;\nuniform float uFR;\nuniform float uJyoti;\nuniform vec3 uJyotiCol;\nuniform vec3 uJP[4];\nuniform float uJSpec;')
       .replace('#include <emissivemap_fragment>', '#include <emissivemap_fragment>\n' + LIT_GLSL);
   };
-  mat.customProgramCacheKey = () => 'lit-stone-v2';
+  mat.customProgramCacheKey = () => 'lit-stone-v3';
   return mat;
 }
 const stdTex = (t, bump, extra = {}) => new THREE.MeshStandardMaterial({ map: t, bumpMap: bump || null, bumpScale: bump ? 1.4 : 1, roughness: 0.88, metalness: 0, ...extra });
@@ -1020,6 +1040,104 @@ function buildGate() {
   return group;
 }
 buildGate();
+
+/* ------------------------------------------------------------------ *
+ *  Amar Jawan Jyoti — true to scale under the arch (1972)
+ *  base 15 ft square x 4 ft 3 in, cenotaph 3 ft 2 in, L1A1 rifle ~1.14 m
+ * ------------------------------------------------------------------ */
+const jyoti = { flames: [], mats: [], glow: null };
+function buildJyoti() {
+  const Y = FLOOR, BASE_W = 4.57, PL = Y + 1.30, PED = 0.97, T0 = PL + PED, URN = 1.86;
+  // polished black marble
+  const mc = makeCanvas(256, 256), mx = mc.getContext('2d', { willReadFrequently: true }), R = mulberry(1972);
+  mx.fillStyle = '#101012'; mx.fillRect(0, 0, 256, 256);
+  for (let i = 0; i < 16; i++) {
+    mx.strokeStyle = `rgba(190,190,200,${0.04 + R() * 0.1})`; mx.lineWidth = 0.4 + R() * 1.1;
+    const pts = [R() * 256, R() * 256, R() * 256, R() * 256, R() * 256, R() * 256, R() * 256, R() * 256];
+    for (const ox of [-256, 0, 256]) for (const oy of [-256, 0, 256]) {
+      mx.beginPath(); mx.moveTo(pts[0] + ox, pts[1] + oy); mx.bezierCurveTo(pts[2] + ox, pts[3] + oy, pts[4] + ox, pts[5] + oy, pts[6] + ox, pts[7] + oy); mx.stroke();
+    }
+  }
+  grain(mx, 256, 1973, { mott: 0.25, med: 0.12, fine: 0.08 });
+  const marble = makeLit(new THREE.MeshStandardMaterial({ map: toTex(mc), roughness: 0.14 }), jyotiU);
+  const granite = makeLit(new THREE.MeshStandardMaterial({ map: redT.map, color: 0x8a5a4c, roughness: 0.3 }), jyotiU);
+  const urnMat = makeLit(new THREE.MeshStandardMaterial({ map: redT.map, color: 0xc06a4c, roughness: 0.6 }), jyotiU);
+  const metal = makeLit(new THREE.MeshStandardMaterial({ color: 0x1b1c1e, roughness: 0.38, metalness: 0.65 }), jyotiU);
+  const wood = makeLit(new THREE.MeshStandardMaterial({ color: 0x4a2c1a, roughness: 0.5 }), jyotiU);
+  const helm = makeLit(new THREE.MeshStandardMaterial({ color: 0x3c4430, roughness: 0.72, metalness: 0.15, side: THREE.DoubleSide }), jyotiU);
+  const L = { marble: [], granite: [], urn: [], metal: [], wood: [], helm: [] };
+  // stepped plinth (lowest course polished red granite, then black marble)
+  boxB(L.granite, 0, Y, 0, BASE_W, 0.45, BASE_W);
+  boxB(L.marble, 0, Y + 0.45, 0, 3.0, 0.45, 3.0);
+  boxB(L.marble, 0, Y + 0.9, 0, 2.2, 0.4, 2.2);
+  // cenotaph
+  boxB(L.marble, 0, PL, 0, 1.45, 0.08, 1.45);
+  boxB(L.marble, 0, PL + 0.08, 0, 1.3, PED - 0.16, 1.3);
+  boxB(L.marble, 0, T0 - 0.08, 0, 1.45, 0.08, 1.45);
+  // four urns at the corners of the plinth
+  const prof = [[0.01, 0], [0.22, 0], [0.22, 0.06], [0.13, 0.12], [0.1, 0.24], [0.16, 0.3], [0.3, 0.4], [0.36, 0.52], [0.37, 0.6], [0.33, 0.64], [0.29, 0.6], [0.01, 0.57]].map(([x, y]) => new THREE.Vector2(x, y));
+  const urnTop = Y + 0.45 + 0.6;
+  for (const sx of [-1, 1]) for (const sz of [-1, 1]) {
+    const u = new THREE.LatheGeometry(prof, 28); u.translate(sx * URN, Y + 0.45, sz * URN); L.urn.push(u);
+  }
+  jyotiShared.uJP.value.forEach((v, i) => v.set((i & 1 ? 1 : -1) * URN, urnTop + 0.28, (i & 2 ? 1 : -1) * URN));
+  // L1A1 self-loading rifle, reversed: bayonet down, butt up (local z+ = underside of the rifle)
+  const part = (list, g, x, y, z, rx = 0) => { if (rx) g.rotateX(rx); g.translate(x, T0 + y, z); list.push(g); };
+  part(L.metal, new THREE.BoxGeometry(0.028, 0.2, 0.006), 0, 0.08, 0);
+  part(L.metal, new THREE.CylinderGeometry(0.017, 0.017, 0.08, 10), 0, 0.22, 0);
+  part(L.metal, new THREE.CylinderGeometry(0.011, 0.012, 0.2, 10), 0, 0.36, 0);
+  part(L.metal, new THREE.BoxGeometry(0.008, 0.05, 0.03), 0, 0.3, -0.022);
+  part(L.wood, new THREE.BoxGeometry(0.05, 0.3, 0.064), 0, 0.61, 0.004);
+  part(L.metal, new THREE.BoxGeometry(0.046, 0.32, 0.074), 0, 0.92, 0);
+  part(L.metal, new THREE.BoxGeometry(0.032, 0.2, 0.07), 0, 0.86, 0.12, 0.18);
+  part(L.metal, new THREE.BoxGeometry(0.02, 0.15, 0.03), 0, 0.95, -0.055);
+  part(L.wood, new THREE.BoxGeometry(0.034, 0.11, 0.036), 0, 1.06, 0.085, -0.35);
+  part(L.wood, new THREE.BoxGeometry(0.042, 0.27, 0.11), 0, 1.215, 0.012);
+  part(L.metal, new THREE.BoxGeometry(0.046, 0.02, 0.125), 0, 1.36, 0.012);
+  // steel helmet resting on the butt
+  const hc = T0 + 1.3;
+  const dome = new THREE.SphereGeometry(0.17, 30, 10, 0, Math.PI * 2, 0, Math.PI * 0.42); dome.scale(1, 0.75, 1.12); dome.translate(0, hc, 0.012); L.helm.push(dome);
+  const brim = new THREE.CylinderGeometry(0.232, 0.24, 0.012, 36); brim.scale(1, 1, 1.1); brim.translate(0, hc + 0.03, 0.012); L.helm.push(brim);
+  for (const [list, mat, uvs] of [[L.granite, granite, 3], [L.marble, marble, 1.5], [L.urn, urnMat, 2], [L.metal, metal, 1], [L.wood, wood, 1], [L.helm, helm, 1]]) addMesh(list, mat, uvs, true, true);
+  // "AMAR JAWAN" in gold on all four sides of the cenotaph
+  const tc = makeCanvas(512, 128), tx = tc.getContext('2d', { willReadFrequently: true });
+  const word = 'AMAR JAWAN', fpx = 66;
+  tx.font = `700 ${fpx}px "Times New Roman", Times, "Liberation Serif", Georgia, serif`; tx.textBaseline = 'middle';
+  const sp = 7, ws = [...word].map(c => tx.measureText(c).width), tot = ws.reduce((a, b) => a + b, 0) + sp * (word.length - 1);
+  const gg = tx.createLinearGradient(0, 30, 0, 98); gg.addColorStop(0, '#fff0a8'); gg.addColorStop(0.45, '#e2b13c'); gg.addColorStop(1, '#8c6216');
+  let gx = (512 - tot) / 2;
+  [...word].forEach((ch, i) => {
+    tx.fillStyle = 'rgba(0,0,0,0.6)'; tx.fillText(ch, gx + 2, 66);
+    tx.fillStyle = gg; tx.fillText(ch, gx, 64);
+    gx += ws[i] + sp;
+  });
+  const goldT = toTex(tc, true, false);
+  const gold = makeLit(new THREE.MeshStandardMaterial({ map: goldT, emissiveMap: goldT, emissive: new THREE.Color(0.55, 0.42, 0.18), emissiveIntensity: 0.25, roughness: 0.32, metalness: 0.35, transparent: true, alphaTest: 0.35, depthWrite: false, polygonOffset: true, polygonOffsetFactor: -2, polygonOffsetUnits: -2 }), jyotiU);
+  for (const [ry, x, z] of [[0, 0, 0.652], [Math.PI, 0, -0.652], [Math.PI / 2, 0.652, 0], [-Math.PI / 2, -0.652, 0]]) {
+    const g = new THREE.PlaneGeometry(1.16, 0.29); g.rotateY(ry); g.translate(x, PL + PED / 2, z);
+    scene.add(new THREE.Mesh(g, gold));
+  }
+  // flickering flames
+  for (let i = 0; i < 4; i++) {
+    const mat = new THREE.ShaderMaterial({
+      uniforms: { uTime, uAmt: { value: 1 }, uSeed: { value: i * 1.618 } },
+      vertexShader: flameMat.vertexShader,
+      fragmentShader: flameMat.fragmentShader.replace('uniform float uAmt;', 'uniform float uAmt; uniform float uSeed;').replace('float t = uTime;', 'float t = uTime * 1.2 + uSeed * 7.0;'),
+      transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, side: THREE.DoubleSide, fog: false,
+    });
+    const grp = new THREE.Group();
+    grp.position.copy(jyotiShared.uJP.value[i]).setY(urnTop - 0.06);
+    for (let k = 0; k < 2; k++) {
+      const g = new THREE.PlaneGeometry(0.62, 0.95); g.translate(0, 0.475, 0);
+      const m = new THREE.Mesh(g, mat); m.rotation.y = k * Math.PI / 2; m.renderOrder = 2; grp.add(m);
+    }
+    scene.add(grp); jyoti.flames.push(grp); jyoti.mats.push(mat);
+  }
+  // warm pool of light on the passage floor
+  const gl = new THREE.PlaneGeometry(8.6, 11); gl.rotateX(-Math.PI / 2);
+  jyoti.glow = new THREE.Mesh(gl, new THREE.MeshBasicMaterial({ map: glowT, color: new THREE.Color(1.0, 0.55, 0.22), transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false }));
+  jyoti.glow.position.y = FLOOR + 0.015; jyoti.glow.renderOrder = 1; scene.add(jyoti.glow);
+}
 
 /* ------------------------------------------------------------------ *
  *  The Canopy (chhatri) behind the gate
@@ -1497,6 +1615,7 @@ for (let k = 0; k < 3; k++) {
   const g = new THREE.PlaneGeometry(4.4 - k * 0.8, 4.4 + k * 0.5); g.translate(0, (4.4 + k * 0.5) / 2, 0);
   const m = new THREE.Mesh(g, flameMat); m.rotation.y = k * Math.PI / 3; m.renderOrder = 2; flame.add(m);
 }
+buildJyoti();
 const gateGlowMat = new THREE.MeshBasicMaterial({ map: glowT, color: new THREE.Color(1, 0.6, 0.3), transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false });
 {
   const g = new THREE.PlaneGeometry(1, 1); g.rotateX(-Math.PI / 2);
@@ -1675,7 +1794,7 @@ const MODES = {
     bloomStrength: 0.14, bloomRadius: 0.4, bloomThreshold: 1.0,
     night: 0, stars: 0, moon: 0, flood: 0, tri: 0, lamps: 0, dust: 0.12, fly: 0, birds: 1, flame: 0, beams: 0,
     waterDeep: C(0x2c4a4e), waterSky: C(0xb2cade), glowCol: C(0xffa060), glowAmt: 0,
-    spotCol: C(0xffb070), spotInt: 0, canopyFlood: 0, farFlood: 0, fountain: 1, fountCol: C(0xe8f2ff), hazeAmt: 0.85,
+    spotCol: C(0xffb070), spotInt: 0, canopyFlood: 0, farFlood: 0, fountain: 1, fountCol: C(0xe8f2ff), hazeAmt: 0.85, jyoti: 0.3,
   },
   golden: {
     sunElev: 4.2, sunAzim: 22, turbidity: 9, rayleigh: 2.6, mie: 0.009, mieG: 0.93,
@@ -1685,7 +1804,7 @@ const MODES = {
     bloomStrength: 0.38, bloomRadius: 0.55, bloomThreshold: 0.86,
     night: 0, stars: 0, moon: 0, flood: 0, tri: 0, lamps: 0.1, dust: 1, fly: 0, birds: 1, flame: 0, beams: 0,
     waterDeep: C(0x3a3034), waterSky: C(0xf0b48a), glowCol: C(0xffa060), glowAmt: 0,
-    spotCol: C(0xffb070), spotInt: 0, canopyFlood: 0, farFlood: 0, fountain: 1, fountCol: C(0xffe2c0), hazeAmt: 0.9,
+    spotCol: C(0xffb070), spotInt: 0, canopyFlood: 0, farFlood: 0, fountain: 1, fountCol: C(0xffe2c0), hazeAmt: 0.9, jyoti: 0.65,
   },
   night: {
     sunElev: -14, sunAzim: 22, turbidity: 2, rayleigh: 0.6, mie: 0.003, mieG: 0.8,
@@ -1695,7 +1814,7 @@ const MODES = {
     bloomStrength: 0.5, bloomRadius: 0.5, bloomThreshold: 0.78,
     night: 1, stars: 1, moon: 1, flood: 0.78, tri: 0, lamps: 1, dust: 0, fly: 1, birds: 0, flame: 1, beams: 0,
     waterDeep: C(0x04070d), waterSky: C(0x18202e), glowCol: C(0xffa25a), glowAmt: 0.5,
-    spotCol: C(0xffb070), spotInt: 1, canopyFlood: 1.2, farFlood: 1, fountain: 1, fountCol: C(0xffd6a0), hazeAmt: 1,
+    spotCol: C(0xffb070), spotInt: 1, canopyFlood: 1.2, farFlood: 1, fountain: 1, fountCol: C(0xffd6a0), hazeAmt: 1, jyoti: 1.4,
   },
   tri: {
     sunElev: -14, sunAzim: 22, turbidity: 2, rayleigh: 0.6, mie: 0.003, mieG: 0.8,
@@ -1705,7 +1824,7 @@ const MODES = {
     bloomStrength: 0.6, bloomRadius: 0.55, bloomThreshold: 0.72,
     night: 1, stars: 1, moon: 1, flood: 0.06, tri: 1, lamps: 0.85, dust: 0, fly: 0.8, birds: 0, flame: 1, beams: 1,
     waterDeep: C(0x04070d), waterSky: C(0x161c28), glowCol: C(0x9effb0), glowAmt: 0.42,
-    spotCol: C(0xdfe6ff), spotInt: 0.25, canopyFlood: 0.9, farFlood: 0.8, fountain: 1, fountCol: C(0xc8ffd8), hazeAmt: 1,
+    spotCol: C(0xdfe6ff), spotInt: 0.25, canopyFlood: 0.9, farFlood: 0.8, fountain: 1, fountCol: C(0xc8ffd8), hazeAmt: 1, jyoti: 1.3,
   },
 };
 const MODE_LABEL = { day: 'Day', golden: 'Golden hour', night: 'Night', tri: 'Tricolour' };
@@ -1770,6 +1889,7 @@ function applyMode() {
   gateGlowMat.color.copy(P.glowCol); gateGlowMat.opacity = P.glowAmt;
   lensMat.color.copy(P.spotCol).multiplyScalar(0.06 + P.spotInt * 3 + P.tri * 2.5);
   canopyLight.intensity = P.canopyFlood * 70;
+  for (const m of jyoti.mats) m.uniforms.uAmt.value = 0.75 + 0.25 * Math.min(1, P.jyoti);
 }
 
 /* ------------------------------------------------------------------ *
@@ -1908,6 +2028,14 @@ function animate() {
     camFwd.set(camera.position.x, 0, camera.position.z);
     flame.rotation.y = Math.atan2(camFwd.x, camFwd.z);
   }
+  // Amar Jawan Jyoti: billboard + flicker
+  const jf = 0.86 + 0.08 * Math.sin(t * 11.3) + 0.04 * Math.sin(t * 23.7 + 1.1) + 0.02 * Math.sin(t * 41.9 + 2.3);
+  jyotiShared.uJyoti.value = cur.jyoti * jf;
+  jyoti.glow.material.opacity = cur.jyoti * 0.32 * jf;
+  jyoti.flames.forEach((f, i) => {
+    f.rotation.y = Math.atan2(camera.position.x - f.position.x, camera.position.z - f.position.z);
+    f.scale.set(1, 0.92 + 0.1 * Math.sin(t * (9 + i) + i * 2.1) + 0.04 * Math.sin(t * 21 + i), 1);
+  });
   const flick = 0.82 + 0.12 * Math.sin(t * 13.1) + 0.06 * Math.sin(t * 27.3 + 1.7);
   flameLight.intensity = cur.flame * 140 * flick;
   for (const b of beams) if (b.visible) { b.rotation.z = b.userData.base + Math.sin(t * 0.35 + b.userData.phase) * 0.16; b.rotation.x = -0.18 + Math.sin(t * 0.27 + b.userData.phase) * 0.08; }
