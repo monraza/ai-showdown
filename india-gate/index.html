@@ -52,7 +52,9 @@ h2{font-size:26px;margin:0 0 6px;letter-spacing:-.01em}
 .dot{width:12px;height:12px;border-radius:50%;flex:none}
 .card p{margin:0;color:var(--muted);font-size:15px;flex:1}
 .card .btn{justify-content:center}
-.prompt{background:var(--panel);border:1px solid var(--line);border-left:4px solid var(--saffron);border-radius:12px;padding:18px 20px;white-space:pre-wrap;font:15px/1.6 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;margin:0}
+.prompt{background:var(--panel);border:1px solid var(--line);border-left:4px solid var(--saffron);border-radius:12px;padding:18px 20px;white-space:pre-wrap;font:14px/1.65 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;margin:0;overflow-wrap:anywhere;max-height:none}
+.phead{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:16px}
+.phead .sub{margin:0}
 footer{border-top:1px solid var(--line);padding:28px 0 40px;color:var(--muted);font-size:14px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
 .follow{display:flex;gap:10px}
 .badge{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:5px;background:var(--text);color:#111;font-weight:900;font-size:12px}
@@ -60,7 +62,7 @@ footer{border-top:1px solid var(--line);padding:28px 0 40px;color:var(--muted);f
   .hero{grid-template-columns:1fr;gap:28px;padding-top:16px;justify-items:center;text-align:center}
   .lede{margin-left:auto;margin-right:auto}.cta{justify-content:center}
   .grid{grid-template-columns:1fr}.card img{aspect-ratio:4/3;object-position:center 30%}
-  header.top nav a:not(:last-child){display:none}
+  header.top nav a:first-child{display:none}
 }
 </style>
 </head>
@@ -69,14 +71,14 @@ footer{border-top:1px solid var(--line);padding:28px 0 40px;color:var(--muted);f
 <div class="wrap">
   <header class="top">
     <b>India Gate · AI Showdown</b>
-    <nav><a href="#play">Play</a><a href="https://x.com/_monisraza" target="_blank" rel="noopener">Follow</a></nav>
+    <nav><a href="#play">Play</a><a href="#prompt">Prompt</a><a href="https://x.com/_monisraza" target="_blank" rel="noopener">Follow</a></nav>
   </header>
 
   <div class="hero">
     <div>
       <div class="eyebrow">Same prompt · 3 Claude models</div>
       <h1>Which AI built India Gate best?</h1>
-      <p class="lede">Sonnet 5.5, Opus 5.5 and Fable 5.2 each got the same prompt and built India Gate in 3D, in a single HTML file. Play all three yourself.</p>
+      <p class="lede">Sonnet 5.5, Opus 5.5 and Fable 5.2 each got the same prompt and built India Gate in 3D, in a single HTML file. Play all three yourself and <a href="#prompt">read the exact prompt</a>.</p>
       <div class="cta"><a class="btn primary" href="#play">Play the scenes</a><a class="btn" href="https://x.com/_monisraza" target="_blank" rel="noopener">Follow for the next round</a></div>
     </div>
     <div class="phone">
@@ -116,10 +118,36 @@ footer{border-top:1px solid var(--line);padding:28px 0 40px;color:var(--muted);f
     </div>
   </section>
 
-  <section id="prompt" hidden>
+  <section id="prompt">
     <h2>The prompt</h2>
-    <p class="sub">Every model got exactly this.</p>
-    <pre class="prompt"></pre>
+    <div class="phead"><p class="sub">Every model got exactly this, word for word.</p><button class="btn" id="copyPrompt" type="button">Copy prompt</button></div>
+    <pre class="prompt">Create ONE self-contained index.html with an interactive 3D model of India Gate (New Delhi) using Three.js r160 via importmap from unpkg (use three/addons/ for OrbitControls, Sky, EffectComposer, RenderPass, UnrealBloomPass, OutputPass). Use only procedural geometry and canvas-generated textures, with no external assets. Output only the complete code in one block, no explanation.
+
+CREATIVE BRIEF (this part is yours):
+Capture the real monument&#x27;s recognisable character: a tall sandstone memorial arch with a through-passage, stepped upper tiers, ornamental frieze, carved roundels, the &quot;INDIA&quot; inscription, and the domed canopy behind it. You choose the proportions, materials, textures, surrounding scenery, atmosphere, colour palette, animated details and any extra touches you think will look best. Make it look like a showpiece you&#x27;d be proud to post. Surprise me with the details.
+
+FIXED REQUIREMENTS (do not change these):
+
+Lighting modes, switched smoothly with eased transitions of sun, sky, fog, exposure and bloom:
+- Day
+- Golden hour
+- Night
+- Tricolour: night with the gate lit in horizontal bands, saffron at the top, white in the middle, green at the bottom. Interpret the look as you like.
+
+UI (HTML overlay, translucent glass-style panels, system font):
+- Top-left title card reading &quot;INDIA GATE&quot; with a small saffron/white/green bar.
+- Top-right hint card: drag to orbit, scroll to zoom, keys 1-4, H hides UI.
+- Bottom-centre bar with two button groups:
+  1) Lighting: Day | Golden hour | Night | Tricolour (active one highlighted).
+  2) Camera: Front | Corner | Look up | Through arch | Rear | Aerial | Orbit toggle. Each camera button tweens the camera position and orbit target over about 1.8 seconds with cubic easing.
+- Keyboard: keys 1-4 switch lighting, R toggles auto-orbit, H hides all UI.
+
+Controls and rendering:
+- OrbitControls with damping and a slow auto-rotate on load. Dragging the scene stops auto-orbit. Limit zoom distance and keep the camera above the ground.
+- Soft shadows, ACES tone mapping, bloom post-processing, fog.
+- Handle window resize, and use lighter settings on small screens.
+
+QUALITY BAR: complete, no TODOs or placeholders, no console errors, and it runs when the file is opened directly in a browser.</pre>
   </section>
 
 
@@ -134,6 +162,13 @@ footer{border-top:1px solid var(--line);padding:28px 0 40px;color:var(--muted);f
 <script>
 const v = document.getElementById('hero'), s = document.getElementById('sound');
 s.onclick = () => { v.muted = !v.muted; if (!v.muted) { v.currentTime = 0; v.play(); } s.textContent = v.muted ? '🔇 Tap for sound' : '🔊 Sound on'; };
+const cp = document.getElementById('copyPrompt');
+if (cp) cp.onclick = async () => {
+  const txt = document.querySelector('.prompt').textContent;
+  try { await navigator.clipboard.writeText(txt); }
+  catch (e) { const r = document.createRange(); r.selectNodeContents(document.querySelector('.prompt')); const sel = getSelection(); sel.removeAllRanges(); sel.addRange(r); document.execCommand('copy'); }
+  cp.textContent = 'Copied ✓'; setTimeout(() => cp.textContent = 'Copy prompt', 1800);
+};
 </script>
 </body>
 </html>
