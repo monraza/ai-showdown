@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -17,81 +17,99 @@
 <meta name="twitter:title" content="Same prompt. 3 Claude models. Which built India Gate best?">
 <meta name="twitter:description" content="Sonnet 5.5 vs Opus 5.5 vs Fable 5.2. Play all three 3D scenes in your browser.">
 <meta name="twitter:image" content="https://monraza.github.io/ai-showdown/india-gate/media/og.jpg">
-<meta name="theme-color" content="#0b0d12">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230b0d12'/%3E%3Cpath d='M14 52V22h36v30h-9V34a9 9 0 0 0-18 0v18z' fill='%23f2efe6'/%3E%3Crect x='10' y='14' width='44' height='6' rx='2' fill='%23ff9933'/%3E%3C/svg%3E">
+<meta name="theme-color" content="#111317">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230066d6'/%3E%3Cpath d='M18 48V24h28v24M27 48V37a5 5 0 0 1 10 0v11M15 18h34' fill='none' stroke='%23fff' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="../glass.css?v=1">
 <style>
-:root{--bg:#0b0d12;--panel:#141821;--line:#232a36;--text:#f2efe6;--muted:#a3a9b6;--sonnet:#38c9b4;--opus:#ff9933;--fable:#a58bff;--saffron:#ff9933;--green:#3fae49}
-*{box-sizing:border-box}
-html,body{margin:0;background:var(--bg);color:var(--text);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,"Ubuntu Sans",sans-serif;-webkit-font-smoothing:antialiased}
-a{color:inherit}
-.wrap{max-width:1040px;margin:0 auto;padding:0 16px}
-.flag{height:4px;background:linear-gradient(90deg,var(--saffron) 0 33.3%,#fff 33.3% 66.6%,var(--green) 66.6%)}
-header.top{display:flex;justify-content:space-between;align-items:center;padding:14px 0;font-size:14px;color:var(--muted)}
-header.top b{color:var(--text);letter-spacing:.02em}
-header.top nav a{margin-left:14px;text-decoration:none;color:var(--muted)}
-header.top nav a:hover{color:var(--text)}
-.hero{display:grid;grid-template-columns:1fr auto;gap:40px;align-items:center;padding:28px 0 40px}
-.eyebrow{font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--saffron);font-weight:700}
-h1{font-size:clamp(34px,6vw,58px);line-height:1.05;margin:12px 0 16px;letter-spacing:-.02em}
-.lede{color:var(--muted);font-size:18px;max-width:34ch;margin:0 0 24px}
-.cta{display:flex;gap:12px;flex-wrap:wrap}
-.btn{display:inline-flex;align-items:center;gap:8px;padding:13px 20px;border-radius:999px;font-weight:700;text-decoration:none;border:1px solid var(--line);background:var(--panel);color:var(--text);cursor:pointer;font-size:15px}
-.btn.primary{background:var(--text);color:#111;border-color:var(--text)}
-.btn:focus-visible{outline:2px solid var(--saffron);outline-offset:2px}
-.phone{position:relative;width:min(300px,78vw);aspect-ratio:9/16;border-radius:26px;overflow:hidden;border:1px solid var(--line);box-shadow:0 30px 80px rgba(0,0,0,.55);background:#000}
-.phone video{width:100%;height:100%;object-fit:cover;display:block}
-.sound{position:absolute;right:10px;bottom:10px;border:0;border-radius:999px;padding:8px 12px;background:rgba(0,0,0,.6);color:#fff;font-weight:700;font-size:13px;cursor:pointer;backdrop-filter:blur(6px)}
-section{padding:40px 0;border-top:1px solid var(--line)}
-h2{font-size:26px;margin:0 0 6px;letter-spacing:-.01em}
-.sub{color:var(--muted);margin:0 0 24px}
-.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
-.card{background:var(--panel);border:1px solid var(--line);border-radius:18px;overflow:hidden;display:flex;flex-direction:column}
-.card .cv{width:100%;aspect-ratio:16/9;object-fit:cover;display:block;background:#000}
-.card .body{padding:16px 18px 18px;display:flex;flex-direction:column;gap:10px;flex:1}
-.name{display:flex;align-items:center;gap:10px;font-weight:800;font-size:20px}
-.dot{width:12px;height:12px;border-radius:50%;flex:none}
-.card p{margin:0;color:var(--muted);font-size:15px;flex:1}
-.card .btn{justify-content:center}
-.card .acts{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.card .acts .btn{padding-left:8px;padding-right:8px;cursor:pointer;font-family:inherit;font-size:15px;white-space:nowrap}
-#tourDlg{width:min(1100px,94vw);padding:0;border:1px solid var(--line);border-radius:16px;background:#000;color:var(--text);overflow:hidden}
-#tourDlg::backdrop{background:rgba(4,5,8,.82);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
-#tourDlg .th{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 12px 10px 16px;background:var(--panel)}
-#tourDlg .th .name{font-size:17px}
-#tourDlg .x{border:1px solid var(--line);background:transparent;color:var(--text);border-radius:999px;width:36px;height:36px;font-size:18px;line-height:1;cursor:pointer}
+.wrap{max-width:1080px;margin:0 auto;padding:0 16px}
+/* header: one glass bar */
+header.top{position:sticky;top:12px;z-index:5;margin:12px 0 0;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 8px 8px 10px;background:var(--glass-popover)}   /* floats over scrolling content, so the denser glass */
+section{scroll-margin-top:76px}
+.brand{display:flex;align-items:center;gap:10px;min-width:0;color:var(--ink);text-decoration:none;font:600 15px/20px var(--font-sans);letter-spacing:-.01em}
+.brand span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+header.top nav{display:flex;align-items:center;gap:4px}
+/* hero */
+.hero{display:grid;grid-template-columns:1fr auto;gap:48px;align-items:center;padding:56px 0 44px}
+h1{font-size:clamp(34px,6vw,56px);line-height:1.06;font-weight:700;margin:12px 0 16px;letter-spacing:-.02em}
+.lede{color:var(--ink-muted);font-size:17px;line-height:26px;max-width:36ch;margin:0 0 24px}
+.cta{display:flex;gap:8px;flex-wrap:wrap}
+.phone{position:relative;width:min(316px,80vw);padding:8px;border-radius:30px}
+.phone video{display:block;width:100%;aspect-ratio:9/16;object-fit:cover;border-radius:22px;background:#000}
+.sound{position:absolute;right:18px;bottom:18px;background:var(--glass-popover);border:1px solid var(--edge);-webkit-backdrop-filter:blur(var(--blur-glass)) saturate(170%);backdrop-filter:blur(var(--blur-glass)) saturate(170%)}
+.sound:hover:not(:disabled){background:var(--glass-popover)}
+.sound .on,.sound.is-on .off{display:none}
+.sound.is-on .on{display:inline}
+/* sections */
+section{padding:28px 0}
+h2{font:700 22px/28px var(--font-sans);margin:0 0 4px;letter-spacing:-.02em}
+.sub{color:var(--ink-muted);font-size:14px;line-height:22px;margin:0 0 16px}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.card{padding:8px;gap:0}
+.card .cv{display:block;width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:8px;background:#000}
+.card .body{display:flex;flex-direction:column;gap:8px;flex:1;padding:12px 6px 6px}
+.name{display:flex;align-items:center;gap:8px;font:600 16px/20px var(--font-sans);letter-spacing:-.01em}
+.name .bx-dot{width:9px;height:9px}
+.card p{margin:0;color:var(--ink-muted);font-size:13px;line-height:18px;flex:1}
+.card .acts{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px}
+.card .acts .bx-btn{height:34px;padding:0 8px}
+/* prompt */
+.pane{padding:20px}
+.phead{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.phead .sub{margin:0;flex:1 1 280px}
+.phead + .bx-code{margin-bottom:0}
+.followup{margin-top:24px}
+/* footer */
+footer{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin:16px 0 28px;padding:12px 12px 12px 16px;color:var(--ink-muted);font-size:13px}
+.follow{display:flex;gap:8px;flex-wrap:wrap}
+.follow .bx-tile--sm{width:18px;height:18px;border-radius:5px;background:var(--ink);color:var(--wall-base);font:700 10px/1 var(--font-sans)}
+/* tour player */
+#tourDlg{width:min(1100px,94vw);max-height:94vh;padding:0;border:1px solid var(--edge);border-radius:18px;background:var(--glass-popover);color:var(--ink);box-shadow:var(--shadow-popover);-webkit-backdrop-filter:blur(var(--blur-popover)) saturate(180%);backdrop-filter:blur(var(--blur-popover)) saturate(180%);overflow:hidden}
+#tourDlg::backdrop{background:rgba(20,30,50,.45);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+#tourDlg .th{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 8px 8px 16px;border-bottom:1px solid var(--hairline)}
+#tourDlg .name{font-size:15px}
+#tourDlg .x{width:32px;height:32px}
 #tourDlg video{display:block;width:100%;aspect-ratio:16/9;background:#000}
-.prompt{background:var(--panel);border:1px solid var(--line);border-left:4px solid var(--saffron);border-radius:12px;padding:18px 20px;white-space:pre-wrap;font:14px/1.65 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;margin:0;overflow-wrap:anywhere;max-height:none}
-.phead{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:16px}
-.phead .sub{margin:0}
-footer{border-top:1px solid var(--line);padding:28px 0 40px;color:var(--muted);font-size:14px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
-.follow{display:flex;gap:10px}
-.badge{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:5px;background:var(--text);color:#111;font-weight:900;font-size:12px}
 @media (max-width:760px){
-  .hero{grid-template-columns:1fr;gap:28px;padding-top:16px;justify-items:center;text-align:center}
-  .lede{margin-left:auto;margin-right:auto}.cta{justify-content:center}
+  .hero{grid-template-columns:1fr;gap:28px;padding-top:32px;justify-items:center;text-align:center}
+  .lede{margin-left:auto;margin-right:auto}
+  .cta{display:grid;width:min(320px,100%);margin:0 auto}
   .grid{grid-template-columns:1fr}
-  header.top nav a:first-child{display:none}
+  header.top nav .bx-btn{padding:0 10px}
 }
+@media (max-width:420px){ .brand .long{display:none} }
 </style>
 </head>
-<body>
-<div class="flag"></div>
+<body class="bx-page">
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-arch" viewBox="0 0 24 24"><path d="M6 20V9h12v11M10 20v-5a2 2 0 0 1 4 0v5M4 6h16"/></symbol>
+  <symbol id="i-play" viewBox="0 0 24 24"><path d="M7 4.5v15l12-7.5z"/></symbol>
+  <symbol id="i-cube" viewBox="0 0 24 24"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"/><path d="M4 7.5l8 4.5 8-4.5M12 12v9"/></symbol>
+  <symbol id="i-copy" viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h8"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+  <symbol id="i-mute" viewBox="0 0 24 24"><path d="M11 5L6 9H3v6h3l5 4zM22 9l-6 6M16 9l6 6"/></symbol>
+  <symbol id="i-sound" viewBox="0 0 24 24"><path d="M11 5L6 9H3v6h3l5 4zM15.5 8.5a5 5 0 0 1 0 7M19 5a10 10 0 0 1 0 14"/></symbol>
+</svg>
 <div class="wrap">
-  <header class="top">
-    <b>India Gate · AI Showdown</b>
-    <nav><a href="#play">Play</a><a href="#prompt">Prompt</a><a href="https://x.com/_monisraza" target="_blank" rel="noopener">Follow</a></nav>
+  <header class="top bx-glass">
+    <a class="brand" href="./"><span class="bx-tile bx-tile--attention"><svg class="bx-icon"><use href="#i-arch"/></svg></span><span>India Gate<span class="long"> · AI Showdown</span></span></a>
+    <nav aria-label="Page">
+      <a class="bx-btn bx-btn--plain" href="#play">Play</a>
+      <a class="bx-btn bx-btn--plain" href="#prompt">Prompt</a>
+      <a class="bx-btn bx-btn--plain" href="https://x.com/_monisraza" target="_blank" rel="noopener">Follow</a>
+    </nav>
   </header>
 
   <div class="hero">
     <div>
-      <div class="eyebrow">Same prompt · 3 Claude models</div>
+      <div class="bx-label">Same prompt · 3 Claude models</div>
       <h1>Which AI built India Gate best?</h1>
-      <p class="lede">Sonnet 5.5, Opus 5.5 and Fable 5.2 each got the same prompt and built India Gate in 3D, in a single HTML file. Play all three yourself and <a href="#prompt">read the exact prompt</a>.</p>
-      <div class="cta"><a class="btn primary" href="#play">Play the scenes</a><a class="btn" href="https://x.com/_monisraza" target="_blank" rel="noopener">Follow for the next round</a></div>
+      <p class="lede">Sonnet 5.5, Opus 5.5 and Fable 5.2 each got the same prompt and built India Gate in 3D, in a single HTML file.</p>
+      <div class="cta"><a class="bx-btn bx-btn--primary bx-btn--lg" href="#play">Play the scenes</a><a class="bx-btn bx-btn--lg" href="#prompt">Read the exact prompt</a><a class="bx-btn bx-btn--lg" href="https://x.com/_monisraza" target="_blank" rel="noopener">Follow for the next round</a></div>
     </div>
-    <div class="phone">
+    <div class="phone bx-glass">
       <video id="hero" src="media/hero.mp4?v=2" poster="media/poster.jpg?v=2" autoplay muted loop playsinline preload="metadata" aria-label="60 second comparison video of the three India Gate scenes"></video>
-      <button class="sound" id="sound" type="button">🔇 Tap for sound</button>
+      <button class="bx-btn sound" id="sound" type="button" aria-pressed="false"><span class="off"><svg class="bx-icon"><use href="#i-mute"/></svg></span><span class="on"><svg class="bx-icon"><use href="#i-sound"/></svg></span><span class="t">Tap for sound</span></button>
     </div>
   </div>
 
@@ -99,38 +117,38 @@ footer{border-top:1px solid var(--line);padding:28px 0 40px;color:var(--muted);f
     <h2>Play them yourself</h2>
     <p class="sub">Drag to orbit, switch day, golden hour, night and tricolour lighting. Works on phones too.</p>
     <div class="grid">
-      <article class="card">
+      <article class="bx-card card">
         <video class="cv" data-src="media/clip_sonnet.mp4?v=2" poster="media/card_sonnet.jpg?v=2" muted loop playsinline preload="none" aria-label="Preview of Sonnet 5.5's India Gate tour: day, a camera preset, night and tricolour lighting"></video>
         <div class="body">
-          <div class="name"><span class="dot" style="background:var(--sonnet)"></span>Sonnet 5.5</div>
+          <div class="name"><span class="bx-dot" style="background:var(--sonnet)"></span>Sonnet 5.5</div>
           <p>Tricolour floodlights on the gate, waving flags and flame sprites.</p>
-          <div class="acts"><a class="btn primary" href="play.html?m=sonnet">Play in 3D →</a><button class="btn" type="button" data-tour="sonnet">▶ Watch tour</button></div>
+          <div class="acts"><a class="bx-btn bx-btn--primary" href="play.html?m=sonnet"><svg class="bx-icon"><use href="#i-cube"/></svg>Play in 3D</a><button class="bx-btn" type="button" data-tour="sonnet"><svg class="bx-icon"><use href="#i-play"/></svg>Watch tour</button></div>
         </div>
       </article>
-      <article class="card">
+      <article class="bx-card card">
         <video class="cv" data-src="media/clip_opus.mp4?v=2" poster="media/card_opus.jpg?v=2" muted loop playsinline preload="none" aria-label="Preview of Opus 5.5's India Gate tour: day, a camera preset, night and tricolour lighting"></video>
         <div class="body">
-          <div class="name"><span class="dot" style="background:var(--opus)"></span>Opus 5.5</div>
+          <div class="name"><span class="bx-dot" style="background:var(--opus)"></span>Opus 5.5</div>
           <p>Sweeping searchlight beams and a flickering Amar Jawan Jyoti.</p>
-          <div class="acts"><a class="btn primary" href="play.html?m=opus">Play in 3D →</a><button class="btn" type="button" data-tour="opus">▶ Watch tour</button></div>
+          <div class="acts"><a class="bx-btn bx-btn--primary" href="play.html?m=opus"><svg class="bx-icon"><use href="#i-cube"/></svg>Play in 3D</a><button class="bx-btn" type="button" data-tour="opus"><svg class="bx-icon"><use href="#i-play"/></svg>Watch tour</button></div>
         </div>
       </article>
-      <article class="card">
+      <article class="bx-card card">
         <video class="cv" data-src="media/clip_fable.mp4?v=2" poster="media/card_fable.jpg?v=2" muted loop playsinline preload="none" aria-label="Preview of Fable 5.2's India Gate tour: day, a camera preset, night and tricolour lighting"></video>
         <div class="body">
-          <div class="name"><span class="dot" style="background:var(--fable)"></span>Fable 5.2</div>
+          <div class="name"><span class="bx-dot" style="background:var(--fable)"></span>Fable 5.2</div>
           <p>Fountains that glow saffron and green, with a day-to-night sky.</p>
-          <div class="acts"><a class="btn primary" href="play.html?m=fable">Play in 3D →</a><button class="btn" type="button" data-tour="fable">▶ Watch tour</button></div>
+          <div class="acts"><a class="bx-btn bx-btn--primary" href="play.html?m=fable"><svg class="bx-icon"><use href="#i-cube"/></svg>Play in 3D</a><button class="bx-btn" type="button" data-tour="fable"><svg class="bx-icon"><use href="#i-play"/></svg>Watch tour</button></div>
         </div>
       </article>
     </div>
   </section>
 
-
   <section id="prompt">
-    <h2>The prompt</h2>
-    <div class="phead"><p class="sub">Every model got exactly this, word for word.</p><button class="btn" id="copyPrompt" type="button">Copy prompt</button></div>
-    <pre class="prompt">Create ONE self-contained index.html with an interactive 3D model of India Gate (New Delhi) using Three.js r160 via importmap from unpkg (use three/addons/ for OrbitControls, Sky, EffectComposer, RenderPass, UnrealBloomPass, OutputPass). Use only procedural geometry and canvas-generated textures, with no external assets. Output only the complete code in one block, no explanation.
+    <div class="pane bx-glass bx-glass--pane">
+      <h2>The prompt</h2>
+      <div class="phead"><p class="sub">Every model got exactly this, word for word.</p><button class="bx-btn" id="copyPrompt" type="button"><svg class="bx-icon"><use href="#i-copy"/></svg><span>Copy prompt</span></button></div>
+      <pre class="bx-code prompt" id="mainprompt">Create ONE self-contained index.html with an interactive 3D model of India Gate (New Delhi) using Three.js r160 via importmap from unpkg (use three/addons/ for OrbitControls, Sky, EffectComposer, RenderPass, UnrealBloomPass, OutputPass). Use only procedural geometry and canvas-generated textures, with no external assets. Output only the complete code in one block, no explanation.
 
 CREATIVE BRIEF (this part is yours):
 Capture the real monument&#x27;s recognisable character: a tall sandstone memorial arch with a through-passage, stepped upper tiers, ornamental frieze, carved roundels, the &quot;INDIA&quot; inscription, and the domed canopy behind it. You choose the proportions, materials, textures, surrounding scenery, atmosphere, colour palette, animated details and any extra touches you think will look best. Make it look like a showpiece you&#x27;d be proud to post. Surprise me with the details.
@@ -157,8 +175,8 @@ Controls and rendering:
 - Handle window resize, and use lighter settings on small screens.
 
 QUALITY BAR: complete, no TODOs or placeholders, no console errors, and it runs when the file is opened directly in a browser.</pre>
-    <div class="phead" style="margin-top:28px"><p class="sub">The follow-up. Opus 5.5 and Fable 5.2 left out the Amar Jawan Jyoti, so both got this same follow-up, word for word.</p><button class="btn" id="copyFollowup" type="button">Copy follow-up</button></div>
-    <pre class="prompt" id="followup">Here is the India Gate scene you built earlier (attached). Add the Amar Jawan Jyoti under the central arch:
+      <div class="phead followup"><p class="sub">The follow-up. Opus 5.5 and Fable 5.2 left out the Amar Jawan Jyoti, so both got this same follow-up, word for word.</p><button class="bx-btn" id="copyFollowup" type="button"><svg class="bx-icon"><use href="#i-copy"/></svg><span>Copy follow-up</span></button></div>
+      <pre class="bx-code prompt" id="followup">Here is the India Gate scene you built earlier (attached). Add the Amar Jawan Jyoti under the central arch:
 
 - a black marble cenotaph on a stepped plinth, centred in the arch passage, with "AMAR JAWAN" inscribed in gold on its sides
 - an L1A1 rifle standing upright with the barrel pointing down, and a soldier's helmet resting on its butt
@@ -167,24 +185,28 @@ QUALITY BAR: complete, no TODOs or placeholders, no console errors, and it runs 
 The flames should flicker and give off a warm light that falls on the cenotaph and the underside of the arch. Keep the glow subtle in daylight and stronger at night. It should look right in every existing lighting mode.
 
 Keep the scale true to the real monument relative to the arch. Do not change anything else in the scene: geometry, lighting modes, camera presets, controls and performance should all stay as they are. Return the complete updated single HTML file.</pre>
+    </div>
   </section>
 
-
-  <footer>
-    <span>Made by monisraza · three Claude models, one prompt</span>
+  <footer class="bx-glass">
+    <span>Made by monisraza · Claude</span>
     <span class="follow">
-      <a class="btn" href="https://www.linkedin.com/in/monisraza" target="_blank" rel="noopener"><span class="badge">in</span>monisraza</a>
-      <a class="btn" href="https://x.com/_monisraza" target="_blank" rel="noopener"><span class="badge">X</span>@_monisraza</a>
+      <a class="bx-btn" href="https://www.linkedin.com/in/monisraza" target="_blank" rel="noopener"><span class="bx-tile bx-tile--sm">in</span>monisraza</a>
+      <a class="bx-btn" href="https://x.com/_monisraza" target="_blank" rel="noopener"><span class="bx-tile bx-tile--sm">X</span>@_monisraza</a>
     </span>
   </footer>
 </div>
 <dialog id="tourDlg" aria-labelledby="tourName">
-  <div class="th"><div class="name" id="tourName"><span class="dot"></span><span></span></div><button class="x" type="button" aria-label="Close tour">✕</button></div>
+  <div class="th"><div class="name" id="tourName"><span class="bx-dot"></span><span></span></div><button class="bx-btn bx-btn--icon x" type="button" aria-label="Close tour"><svg class="bx-icon"><use href="#i-x"/></svg></button></div>
   <video controls playsinline preload="none"></video>
 </dialog>
 <script>
 const v = document.getElementById('hero'), s = document.getElementById('sound');
-s.onclick = () => { v.muted = !v.muted; if (!v.muted) { v.currentTime = 0; v.play(); } s.textContent = v.muted ? '🔇 Tap for sound' : '🔊 Sound on'; };
+s.onclick = () => {
+  v.muted = !v.muted; if (!v.muted) { v.currentTime = 0; v.play(); }
+  s.classList.toggle('is-on', !v.muted); s.setAttribute('aria-pressed', String(!v.muted));
+  s.querySelector('.t').textContent = v.muted ? 'Tap for sound' : 'Sound on';
+};
 /* card previews: load + play only while on screen; still poster if the viewer prefers reduced motion */
 const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const cards = document.querySelectorAll('video.cv'), onScreen = new Set();
@@ -204,7 +226,7 @@ const dlg = document.getElementById('tourDlg'), tv = dlg.querySelector('video'),
 let heroWasPlaying = false;
 document.querySelectorAll('[data-tour]').forEach(b => b.onclick = () => {
   const m = b.dataset.tour;
-  tn.querySelector('.dot').style.background = 'var(--' + m + ')'; tn.lastElementChild.textContent = TOUR[m] + ' · tour';
+  tn.querySelector('.bx-dot').style.background = 'var(--' + m + ')'; tn.lastElementChild.textContent = TOUR[m] + ' · tour';
   tv.poster = 'media/tour_' + m + '.jpg?v=2'; tv.src = 'media/tour_' + m + '.mp4?v=2';
   tv.setAttribute('aria-label', TOUR[m] + ' India Gate tour, 38 seconds');
   heroWasPlaying = !v.paused; v.pause(); cards.forEach(c => c.pause());
@@ -218,12 +240,15 @@ dlg.addEventListener('close', () => {
   onScreen.forEach(c => c.play().catch(() => {}));
 });
 /* copy buttons: the main prompt and the follow-up */
-for (const [id, pre, label] of [['copyPrompt', '.prompt', 'Copy prompt'], ['copyFollowup', '#followup', 'Copy follow-up']]) {
+for (const [id, pre] of [['copyPrompt', '#mainprompt'], ['copyFollowup', '#followup']]) {
   const b = document.getElementById(id), el = document.querySelector(pre);
-  if (b && el) b.onclick = async () => {
+  if (!b || !el) continue;
+  const t = b.querySelector('span'), label = t.textContent, use = b.querySelector('use');
+  b.onclick = async () => {
     try { await navigator.clipboard.writeText(el.textContent); }
     catch (e) { const r = document.createRange(); r.selectNodeContents(el); const sel = getSelection(); sel.removeAllRanges(); sel.addRange(r); document.execCommand('copy'); }
-    b.textContent = 'Copied ✓'; setTimeout(() => b.textContent = label, 1800);
+    t.textContent = 'Copied'; use.setAttribute('href', '#i-check');
+    setTimeout(() => { t.textContent = label; use.setAttribute('href', '#i-copy'); }, 1800);
   };
 }
 </script>

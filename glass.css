@@ -1,0 +1,154 @@
+/* AI Showdown — Bird's-eye Glass design system.
+   Tokens mirror the system's tokens.json; components keep its bx- class names.
+   The site pins dark with data-theme="dark" on <html>; the light set is kept as the system's primary theme. */
+:root {
+  color-scheme: light;
+  --wall-base: #eceff4; --wall-tint-1: #d5e1f2; --wall-tint-2: #e4e0f0; --wall-tint-3: #cfe0e8;
+  --glass: rgba(255,255,255,0.45); --glass-pane: rgba(255,255,255,0.62); --glass-card: rgba(255,255,255,0.68);
+  --glass-column: rgba(255,255,255,0.22); --glass-inset: rgba(255,255,255,0.6); --glass-popover: rgba(255,255,255,0.72);
+  --edge: rgba(255,255,255,0.75); --hairline: rgba(0,0,0,0.07);
+  --fill: rgba(0,0,0,0.05); --fill-hover: rgba(0,0,0,0.08); --fill-selected: rgba(0,0,0,0.065); --raised: #ffffff;
+  --ink: #1d1d1f; --ink-muted: #5a5a5f;
+  --accent: #0066d6; --accent-line: #0066d6; --accent-ink: #0058b8; --accent-wash: rgba(0,102,214,0.08); --on-accent: #ffffff;
+  --danger-ink: #b42318; --danger-fill: rgba(180,35,24,0.08); --scrim: rgba(20,30,50,0.12);
+  --shadow-glass: 0 1px 2px rgba(20,30,50,0.06), 0 10px 28px rgba(20,30,50,0.08);
+  --shadow-popover: 0 30px 80px rgba(20,30,50,0.25);
+  --blur-glass: 28px; --blur-column: 12px; --blur-popover: 40px;
+  --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px; --space-5: 20px; --space-6: 28px; --space-7: 44px;
+  --radius-sm: 7px; --radius-md: 9px; --radius-lg: 12px; --radius-xl: 16px; --radius-pill: 999px;
+  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", Inter, system-ui, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  /* model identity: small dots only, matching the headers in the videos */
+  --sonnet: #38c9b4; --opus: #ff9933; --fable: #a58bff;
+}
+:root[data-theme="dark"], .bx-dark {
+  color-scheme: dark;
+  --wall-base: #111317; --wall-tint-1: #1f2b40; --wall-tint-2: #2a253a; --wall-tint-3: #152830;
+  --glass: rgba(38,38,42,0.55); --glass-pane: rgba(30,30,34,0.62); --glass-card: rgba(48,48,52,0.6);
+  --glass-column: rgba(255,255,255,0.035); --glass-inset: rgba(255,255,255,0.05); --glass-popover: rgba(44,44,48,0.72);
+  --edge: rgba(255,255,255,0.09); --hairline: rgba(255,255,255,0.08);
+  --fill: rgba(255,255,255,0.08); --fill-hover: rgba(255,255,255,0.12); --fill-selected: rgba(255,255,255,0.1); --raised: rgba(255,255,255,0.16);
+  --ink: #f5f5f7; --ink-muted: #a8a8ae;
+  --accent-line: #3b8ef0; --accent-ink: #6cb4ff; --accent-wash: rgba(59,142,240,0.14);
+  --danger-ink: #ff8a80; --danger-fill: rgba(255,138,128,0.12); --scrim: rgba(0,0,0,0.35);
+  --shadow-glass: 0 10px 30px rgba(0,0,0,0.35); --shadow-popover: 0 30px 80px rgba(0,0,0,0.5);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --wall-base: #111317; --wall-tint-1: #1f2b40; --wall-tint-2: #2a253a; --wall-tint-3: #152830;
+    --glass: rgba(38,38,42,0.55); --glass-pane: rgba(30,30,34,0.62); --glass-card: rgba(48,48,52,0.6);
+    --glass-column: rgba(255,255,255,0.035); --glass-inset: rgba(255,255,255,0.05); --glass-popover: rgba(44,44,48,0.72);
+    --edge: rgba(255,255,255,0.09); --hairline: rgba(255,255,255,0.08);
+    --fill: rgba(255,255,255,0.08); --fill-hover: rgba(255,255,255,0.12); --fill-selected: rgba(255,255,255,0.1); --raised: rgba(255,255,255,0.16);
+    --ink: #f5f5f7; --ink-muted: #a8a8ae;
+    --accent-line: #3b8ef0; --accent-ink: #6cb4ff; --accent-wash: rgba(59,142,240,0.14);
+    --danger-ink: #ff8a80; --danger-fill: rgba(255,138,128,0.12); --scrim: rgba(0,0,0,0.35);
+    --shadow-glass: 0 10px 30px rgba(0,0,0,0.35); --shadow-popover: 0 30px 80px rgba(0,0,0,0.5);
+  }
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html, body { margin: 0; }
+body {
+  background: var(--wall-base);
+  color: var(--ink);
+  font: 400 15px/1.5 var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+/* Glass needs a wallpaper: one fixed layer behind the page (background-attachment:fixed stutters on iOS). */
+.bx-wallpaper, body.bx-page::before {
+  background:
+    radial-gradient(1100px 700px at 8% 0%, var(--wall-tint-1), transparent 60%),
+    radial-gradient(900px 650px at 92% 12%, var(--wall-tint-2), transparent 62%),
+    radial-gradient(1100px 800px at 55% 105%, var(--wall-tint-3), transparent 65%),
+    var(--wall-base);
+}
+body.bx-page::before { content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none; }
+a { color: var(--accent-ink); }
+::selection { background: var(--accent-wash); }
+
+/* ---- glass layers ---- */
+.bx-glass {
+  background: var(--glass);
+  border: 1px solid var(--edge);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-glass);
+  -webkit-backdrop-filter: blur(var(--blur-glass)) saturate(170%);
+  backdrop-filter: blur(var(--blur-glass)) saturate(170%);
+}
+.bx-glass--pane { background: var(--glass-pane); }
+.bx-card {
+  display: flex; flex-direction: column; gap: 10px; padding: 14px;
+  border-radius: var(--radius-lg);
+  background: var(--glass-card);
+  border: 1px solid var(--edge);
+  box-shadow: var(--shadow-glass);
+  -webkit-backdrop-filter: blur(var(--blur-glass)) saturate(170%);
+  backdrop-filter: blur(var(--blur-glass)) saturate(170%);
+  color: var(--ink);
+}
+.bx-inset { background: var(--glass-inset); border: 1px solid var(--hairline); border-radius: var(--radius-lg); }
+
+/* ---- buttons ---- */
+.bx-btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  height: 30px; padding: 0 14px; border: 0;
+  border-radius: var(--radius-md);
+  background: var(--fill); color: var(--ink);
+  font: 500 13px/1 var(--font-sans);
+  white-space: nowrap; text-decoration: none; cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.bx-btn svg { width: 14px; height: 14px; flex: none; }
+.bx-btn:hover:not(:disabled) { background: var(--fill-hover); }
+.bx-btn--primary { background: transparent; border: 1.5px solid var(--accent-line); color: var(--accent-ink); }
+.bx-btn--primary:hover:not(:disabled) { background: var(--accent-wash); }
+.bx-btn--plain { background: transparent; }
+.bx-btn--sm { height: 28px; padding: 0 12px; border-radius: var(--radius-sm); }
+.bx-btn--lg { height: 38px; padding: 0 18px; font-size: 14px; }   /* page-level calls to action; same recipe, roomier */
+.bx-btn--icon { width: 28px; height: 28px; padding: 0; border-radius: var(--radius-sm); background: transparent; color: var(--ink-muted); }
+.bx-btn--icon:hover:not(:disabled) { color: var(--ink); }
+
+/* ---- small parts ---- */
+.bx-tag {
+  display: inline-flex; align-items: center; flex: none; height: 20px; padding: 0 8px;
+  border-radius: var(--radius-pill); background: var(--fill); color: var(--ink-muted);
+  font: 600 11px/1 var(--font-sans); white-space: nowrap;
+}
+.bx-tile {
+  display: grid; place-items: center; flex: none; width: 28px; height: 28px;
+  border-radius: 8px; background: var(--fill); color: var(--ink);
+}
+.bx-tile svg { width: 16px; height: 16px; }
+.bx-tile--attention { background: var(--accent); color: var(--on-accent); }
+.bx-tile--sm { width: 22px; height: 22px; border-radius: 6px; }
+.bx-tile--sm svg { width: 13px; height: 13px; }
+.bx-dot { width: 7px; height: 7px; flex: none; border-radius: 50%; background: var(--ink-muted); }
+.bx-label { font: 600 11px/15px var(--font-sans); color: var(--ink-muted); letter-spacing: .02em; }
+.bx-icon { fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+.bx-segmented { display: inline-flex; flex: none; padding: 2px; border-radius: var(--radius-md); background: var(--fill); }
+.bx-segmented > button, .bx-segmented > a {
+  display: inline-flex; align-items: center; justify-content: center; gap: 7px;
+  min-width: 32px; height: 26px; padding: 0 8px; border: 0;
+  border-radius: var(--radius-sm); background: transparent; color: var(--ink-muted);
+  font: 500 13px/1 var(--font-sans); text-decoration: none; white-space: nowrap; cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.bx-segmented svg { width: 14px; height: 14px; }
+.bx-segmented > :hover { color: var(--ink); }
+.bx-segmented > [aria-pressed="true"], .bx-segmented > [aria-current] {
+  background: var(--raised); color: var(--ink); box-shadow: 0 1px 2px rgba(0,0,0,0.12);
+}
+
+.bx-code {
+  margin: 0; padding: 14px 16px; border-radius: var(--radius-lg);
+  background: var(--glass-inset); border: 1px solid var(--hairline); color: var(--ink);
+  font: 12px/18px var(--font-mono); white-space: pre-wrap; overflow-wrap: anywhere;
+}
+
+:where(.bx-btn, .bx-segmented > button, .bx-segmented > a, a, button, summary):focus-visible {
+  outline: 2px solid var(--accent-line); outline-offset: 2px;
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
