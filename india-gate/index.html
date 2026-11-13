@@ -23,8 +23,7 @@
 <style>
 .wrap{max-width:1080px;margin:0 auto;padding:0 16px}
 /* header: one glass bar */
-header.top{position:sticky;top:12px;z-index:5;margin:12px 0 0;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 8px 8px 10px;background:var(--glass-popover)}   /* floats over scrolling content, so the denser glass */
-section{scroll-margin-top:76px}
+header.top{margin:12px 0 0;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 8px 8px 10px;background:var(--glass-popover)}
 .brand{display:flex;align-items:center;gap:10px;min-width:0;color:var(--ink);text-decoration:none;font:600 15px/20px var(--font-sans);letter-spacing:-.01em}
 .brand span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 header.top nav{display:flex;align-items:center;gap:4px}
@@ -48,7 +47,9 @@ h2{font:700 22px/28px var(--font-sans);margin:0 0 4px;letter-spacing:-.02em}
 .sub{color:var(--ink-muted);font-size:14px;line-height:22px;margin:0 0 16px}
 .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
 .card{padding:12px;gap:0}
-.card .cv{cursor:pointer;display:block;width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:8px;background:#000}
+.card .cv{display:block;width:100%;aspect-ratio:16/9;padding:0;border:0;border-radius:8px;overflow:hidden;background:#000;cursor:pointer}
+.card .cv img{display:block;width:100%;height:100%;object-fit:cover;transition:filter .2s}
+.card .cv:hover img{filter:brightness(1.06)}
 .card .cv:focus-visible{outline:2px solid var(--accent-line);outline-offset:2px}
 .card .body{display:flex;flex-direction:column;gap:10px;flex:1;padding:16px 6px 6px}
 .name{display:flex;align-items:center;gap:8px;font:600 16px/20px var(--font-sans);letter-spacing:-.01em}
@@ -60,7 +61,6 @@ h2{font:700 22px/28px var(--font-sans);margin:0 0 4px;letter-spacing:-.02em}
 .phead{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:12px}
 .phead .sub{margin:0;flex:1 1 280px}
 .phead + .bx-code{margin-bottom:0}
-.followup{margin-top:24px}
 /* footer */
 footer{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin:24px 0 0;padding:20px 0 32px;border-top:1px solid var(--hairline);color:var(--ink-muted);font-size:13px}
 .follow{display:flex;gap:8px;flex-wrap:wrap}
@@ -120,7 +120,7 @@ footer{display:flex;justify-content:space-between;align-items:center;gap:12px;fl
     <p class="sub">Drag to orbit, switch day, golden hour, night and tricolour lighting. Works on phones too.</p>
     <div class="grid">
       <article class="bx-card card">
-        <video class="cv" data-src="media/clip_sonnet.mp4?v=2" poster="media/card_sonnet.jpg?v=2" muted loop playsinline preload="none" data-tour="sonnet" role="button" tabindex="0" aria-label="Watch Sonnet 5.5's India Gate video. Preview: day, a camera preset, night and tricolour lighting"></video>
+        <button class="cv" type="button" data-tour="sonnet" aria-label="Watch Sonnet 5.5's India Gate video"><img src="media/card_sonnet.jpg?v=3" width="960" height="540" loading="lazy" alt="Sonnet 5.5's India Gate from the front in daylight"></button>
         <div class="body">
           <div class="name"><span class="bx-dot" style="background:var(--sonnet)"></span>Sonnet 5.5</div>
           <p>Tricolour floodlights on the gate, waving flags and flame sprites.</p>
@@ -128,7 +128,7 @@ footer{display:flex;justify-content:space-between;align-items:center;gap:12px;fl
         </div>
       </article>
       <article class="bx-card card">
-        <video class="cv" data-src="media/clip_opus.mp4?v=2" poster="media/card_opus.jpg?v=2" muted loop playsinline preload="none" data-tour="opus" role="button" tabindex="0" aria-label="Watch Opus 5.5's India Gate video. Preview: day, a camera preset, night and tricolour lighting"></video>
+        <button class="cv" type="button" data-tour="opus" aria-label="Watch Opus 5.5's India Gate video"><img src="media/card_opus.jpg?v=3" width="960" height="540" loading="lazy" alt="Opus 5.5's India Gate from the front in daylight"></button>
         <div class="body">
           <div class="name"><span class="bx-dot" style="background:var(--opus)"></span>Opus 5.5</div>
           <p>Sweeping searchlight beams and a flickering Amar Jawan Jyoti.</p>
@@ -136,7 +136,7 @@ footer{display:flex;justify-content:space-between;align-items:center;gap:12px;fl
         </div>
       </article>
       <article class="bx-card card">
-        <video class="cv" data-src="media/clip_fable.mp4?v=2" poster="media/card_fable.jpg?v=2" muted loop playsinline preload="none" data-tour="fable" role="button" tabindex="0" aria-label="Watch Fable 5.2's India Gate video. Preview: day, a camera preset, night and tricolour lighting"></video>
+        <button class="cv" type="button" data-tour="fable" aria-label="Watch Fable 5.2's India Gate video"><img src="media/card_fable.jpg?v=3" width="960" height="540" loading="lazy" alt="Fable 5.2's India Gate from the front in daylight"></button>
         <div class="body">
           <div class="name"><span class="bx-dot" style="background:var(--fable)"></span>Fable 5.2</div>
           <p>Fountains that glow saffron and green, with a day-to-night sky.</p>
@@ -176,16 +176,6 @@ Controls and rendering:
 - Handle window resize, and use lighter settings on small screens.
 
 QUALITY BAR: complete, no TODOs or placeholders, no console errors, and it runs when the file is opened directly in a browser.</pre>
-    <div class="phead followup"><p class="sub">The follow-up. Opus 5.5 and Fable 5.2 left out the Amar Jawan Jyoti, so both got this same follow-up, word for word.</p><button class="bx-btn" id="copyFollowup" type="button"><svg class="bx-icon"><use href="#i-copy"/></svg><span>Copy follow-up</span></button></div>
-    <pre class="bx-code prompt" id="followup">Here is the India Gate scene you built earlier (attached). Add the Amar Jawan Jyoti under the central arch:
-
-- a black marble cenotaph on a stepped plinth, centred in the arch passage, with "AMAR JAWAN" inscribed in gold on its sides
-- an L1A1 rifle standing upright with the barrel pointing down, and a soldier's helmet resting on its butt
-- four urns, one at each corner of the plinth, each with a burning flame
-
-The flames should flicker and give off a warm light that falls on the cenotaph and the underside of the arch. Keep the glow subtle in daylight and stronger at night. It should look right in every existing lighting mode.
-
-Keep the scale true to the real monument relative to the arch. Do not change anything else in the scene: geometry, lighting modes, camera presets, controls and performance should all stay as they are. Return the complete updated single HTML file.</pre>
   </section>
 
   <footer>
@@ -207,20 +197,8 @@ s.onclick = () => {
   s.classList.toggle('is-on', !v.muted); s.setAttribute('aria-pressed', String(!v.muted));
   s.querySelector('.t').textContent = v.muted ? 'Tap for sound' : 'Sound on';
 };
-/* card previews: load + play only while on screen; still poster if the viewer prefers reduced motion */
-const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
-const cards = document.querySelectorAll('video.cv'), onScreen = new Set();
-const tourOpen = () => document.getElementById('tourDlg').open;
-if (!still && 'IntersectionObserver' in window) {
-  const io = new IntersectionObserver(es => es.forEach(e => {
-    const v = e.target;
-    if (e.isIntersecting) { onScreen.add(v); if (!v.src) v.src = v.dataset.src; if (!tourOpen()) v.play().catch(() => {}); }
-    else { onScreen.delete(v); if (v.src) v.pause(); }
-  }), { threshold: 0.35 });
-  cards.forEach(v => io.observe(v));
-}
-/* tours: one dialog player shared by the three cards. Opening pauses the hero and card loops;
-   closing stops the tour and frees its buffer, so only one tour is ever loaded. */
+/* one dialog player shared by the three cards. Opening pauses the hero video;
+   closing stops the full video and frees its buffer, so only one is ever loaded. */
 const TOUR = { sonnet: 'Sonnet 5.5', opus: 'Opus 5.5', fable: 'Fable 5.2' };
 const dlg = document.getElementById('tourDlg'), tv = dlg.querySelector('video'), tn = document.getElementById('tourName');
 let heroWasPlaying = false;
@@ -228,23 +206,19 @@ function openVideo(m) {
   tn.querySelector('.bx-dot').style.background = 'var(--' + m + ')'; tn.lastElementChild.textContent = TOUR[m] + ' · video';
   tv.poster = 'media/tour_' + m + '.jpg?v=2'; tv.src = 'media/tour_' + m + '.mp4?v=2';
   tv.setAttribute('aria-label', TOUR[m] + ' India Gate video, 38 seconds');
-  heroWasPlaying = !v.paused; v.pause(); cards.forEach(c => c.pause());
+  heroWasPlaying = !v.paused; v.pause();
   dlg.showModal(); tv.play().catch(() => {});
 }
-/* the "Watch video" buttons and the card previews themselves (click, or Enter / Space when focused) */
-document.querySelectorAll('[data-tour]').forEach(el => {
-  el.addEventListener('click', () => openVideo(el.dataset.tour));
-  if (el.tagName === 'VIDEO') el.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openVideo(el.dataset.tour); } });
-});
+/* the "Watch video" buttons and the card images */
+document.querySelectorAll('[data-tour]').forEach(el => el.addEventListener('click', () => openVideo(el.dataset.tour)));
 dlg.querySelector('.x').onclick = () => dlg.close();
 dlg.addEventListener('click', e => { if (e.target === dlg) dlg.close(); });   // click on the backdrop
 dlg.addEventListener('close', () => {
   tv.pause(); tv.removeAttribute('src'); tv.removeAttribute('poster'); tv.load();
   if (heroWasPlaying) v.play().catch(() => {});
-  onScreen.forEach(c => c.play().catch(() => {}));
 });
-/* copy buttons: the main prompt and the follow-up */
-for (const [id, pre] of [['copyPrompt', '#mainprompt'], ['copyFollowup', '#followup']]) {
+/* copy button for the prompt */
+for (const [id, pre] of [['copyPrompt', '#mainprompt']]) {
   const b = document.getElementById(id), el = document.querySelector(pre);
   if (!b || !el) continue;
   const t = b.querySelector('span'), label = t.textContent, use = b.querySelector('use');
