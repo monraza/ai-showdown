@@ -62,7 +62,8 @@ h2{font:700 22px/28px var(--font-sans);margin:0 0 4px;letter-spacing:-.02em}
 .followup{margin-top:24px}
 /* footer */
 footer{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin:16px 0 28px;padding:12px 12px 12px 16px;color:var(--ink-muted);font-size:13px}
-.follow{display:flex;gap:8px;flex-wrap:wrap}
+.follow{display:flex;gap:8px;flex-wrap:wrap;margin-left:auto}
+.appearance{display:flex;align-items:center;gap:8px}
 .follow .bx-tile--sm{width:18px;height:18px;border-radius:5px;background:var(--ink);color:var(--wall-base);font:700 10px/1 var(--font-sans)}
 /* tour player */
 #tourDlg{width:min(1100px,94vw);max-height:94vh;padding:0;border:1px solid var(--edge);border-radius:18px;background:var(--glass-popover);color:var(--ink);box-shadow:var(--shadow-popover);-webkit-backdrop-filter:blur(var(--blur-popover)) saturate(180%);backdrop-filter:blur(var(--blur-popover)) saturate(180%);overflow:hidden}
@@ -73,9 +74,11 @@ footer{display:flex;justify-content:space-between;align-items:center;gap:12px;fl
 #tourDlg video{display:block;width:100%;aspect-ratio:16/9;background:#000}
 @media (max-width:760px){
   .hero{grid-template-columns:1fr;gap:28px;padding-top:32px;justify-items:center;text-align:center}
-  .lede{margin-left:auto;margin-right:auto}.cta{justify-content:center}
+  .lede{margin-left:auto;margin-right:auto}
+  .cta{display:grid;width:min(320px,100%);margin:0 auto}
+  footer{flex-direction:column;align-items:flex-start}.follow{margin-left:0}
   .grid{grid-template-columns:1fr}
-  header.top nav .hide-sm{display:none}
+  header.top nav .bx-btn{padding:0 10px}
 }
 @media (max-width:420px){ .brand .long{display:none} }
 </style>
@@ -98,14 +101,9 @@ footer{display:flex;justify-content:space-between;align-items:center;gap:12px;fl
   <header class="top bx-glass">
     <a class="brand" href="./"><span class="bx-tile bx-tile--attention"><svg class="bx-icon"><use href="#i-arch"/></svg></span><span>India Gate<span class="long"> · AI Showdown</span></span></a>
     <nav aria-label="Page">
-      <a class="bx-btn bx-btn--plain hide-sm" href="#play">Play</a>
+      <a class="bx-btn bx-btn--plain" href="#play">Play</a>
       <a class="bx-btn bx-btn--plain" href="#prompt">Prompt</a>
-      <a class="bx-btn bx-btn--plain hide-sm" href="https://x.com/_monisraza" target="_blank" rel="noopener">Follow</a>
-      <div class="bx-segmented" data-appearance role="group" aria-label="Appearance">
-        <button type="button" value="system" aria-label="Match system" title="Match system"><svg class="bx-icon"><use href="#i-system"/></svg></button>
-        <button type="button" value="light" aria-label="Light" title="Light"><svg class="bx-icon"><use href="#i-sun"/></svg></button>
-        <button type="button" value="dark" aria-label="Dark" title="Dark"><svg class="bx-icon"><use href="#i-moon"/></svg></button>
-      </div>
+      <a class="bx-btn bx-btn--plain" href="https://x.com/_monisraza" target="_blank" rel="noopener">Follow</a>
     </nav>
   </header>
 
@@ -113,8 +111,8 @@ footer{display:flex;justify-content:space-between;align-items:center;gap:12px;fl
     <div>
       <div class="bx-label">Same prompt · 3 Claude models</div>
       <h1>Which AI built India Gate best?</h1>
-      <p class="lede">Sonnet 5.5, Opus 5.5 and Fable 5.2 each got the same prompt and built India Gate in 3D, in a single HTML file. Play all three yourself and <a href="#prompt">read the exact prompt</a>.</p>
-      <div class="cta"><a class="bx-btn bx-btn--primary bx-btn--lg" href="#play">Play the scenes</a><a class="bx-btn bx-btn--lg" href="https://x.com/_monisraza" target="_blank" rel="noopener">Follow for the next round</a></div>
+      <p class="lede">Sonnet 5.5, Opus 5.5 and Fable 5.2 each got the same prompt and built India Gate in 3D, in a single HTML file.</p>
+      <div class="cta"><a class="bx-btn bx-btn--primary bx-btn--lg" href="#play">Play the scenes</a><a class="bx-btn bx-btn--lg" href="#prompt">Read the exact prompt</a><a class="bx-btn bx-btn--lg" href="https://x.com/_monisraza" target="_blank" rel="noopener">Follow for the next round</a></div>
     </div>
     <div class="phone bx-glass">
       <video id="hero" src="media/hero.mp4?v=2" poster="media/poster.jpg?v=2" autoplay muted loop playsinline preload="metadata" aria-label="60 second comparison video of the three India Gate scenes"></video>
@@ -202,6 +200,13 @@ Keep the scale true to the real monument relative to the arch. Do not change any
     <span class="follow">
       <a class="bx-btn" href="https://www.linkedin.com/in/monisraza" target="_blank" rel="noopener"><span class="bx-tile bx-tile--sm">in</span>monisraza</a>
       <a class="bx-btn" href="https://x.com/_monisraza" target="_blank" rel="noopener"><span class="bx-tile bx-tile--sm">X</span>@_monisraza</a>
+    </span>
+    <span class="appearance"><span class="bx-label" id="appLbl">Theme</span>
+      <div class="bx-segmented" data-appearance role="group" aria-labelledby="appLbl">
+          <button type="button" value="system" aria-label="Match system" title="Match system"><svg class="bx-icon"><use href="#i-system"/></svg></button>
+          <button type="button" value="light" aria-label="Light" title="Light"><svg class="bx-icon"><use href="#i-sun"/></svg></button>
+          <button type="button" value="dark" aria-label="Dark" title="Dark"><svg class="bx-icon"><use href="#i-moon"/></svg></button>
+      </div>
     </span>
   </footer>
 </div>
