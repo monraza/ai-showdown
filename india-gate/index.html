@@ -163,6 +163,16 @@ Controls and rendering:
 - Handle window resize, and use lighter settings on small screens.
 
 QUALITY BAR: complete, no TODOs or placeholders, no console errors, and it runs when the file is opened directly in a browser.</pre>
+    <div class="phead" style="margin-top:28px"><p class="sub">The follow-up. Opus 5.5 and Fable 5.2 left out the Amar Jawan Jyoti, so both got this same follow-up, word for word.</p><button class="btn" id="copyFollowup" type="button">Copy follow-up</button></div>
+    <pre class="prompt" id="followup">Here is the India Gate scene you built earlier (attached). Add the Amar Jawan Jyoti under the central arch:
+
+- a black marble cenotaph on a stepped plinth, centred in the arch passage, with "AMAR JAWAN" inscribed in gold on its sides
+- an L1A1 rifle standing upright with the barrel pointing down, and a soldier's helmet resting on its butt
+- four urns, one at each corner of the plinth, each with a burning flame
+
+The flames should flicker and give off a warm light that falls on the cenotaph and the underside of the arch. Keep the glow subtle in daylight and stronger at night. It should look right in every existing lighting mode.
+
+Keep the scale true to the real monument relative to the arch. Do not change anything else in the scene: geometry, lighting modes, camera presets, controls and performance should all stay as they are. Return the complete updated single HTML file.</pre>
   </section>
 
 
@@ -197,13 +207,15 @@ document.querySelectorAll('.ttabs button').forEach(b => b.onclick = () => {
   tv.setAttribute('aria-label', TOUR[m] + ' India Gate tour, 38 seconds');
   if (playing) tv.play().catch(() => {});
 });
-const cp = document.getElementById('copyPrompt');
-if (cp) cp.onclick = async () => {
-  const txt = document.querySelector('.prompt').textContent;
-  try { await navigator.clipboard.writeText(txt); }
-  catch (e) { const r = document.createRange(); r.selectNodeContents(document.querySelector('.prompt')); const sel = getSelection(); sel.removeAllRanges(); sel.addRange(r); document.execCommand('copy'); }
-  cp.textContent = 'Copied ✓'; setTimeout(() => cp.textContent = 'Copy prompt', 1800);
-};
+/* copy buttons: the main prompt and the follow-up */
+for (const [id, pre, label] of [['copyPrompt', '.prompt', 'Copy prompt'], ['copyFollowup', '#followup', 'Copy follow-up']]) {
+  const b = document.getElementById(id), el = document.querySelector(pre);
+  if (b && el) b.onclick = async () => {
+    try { await navigator.clipboard.writeText(el.textContent); }
+    catch (e) { const r = document.createRange(); r.selectNodeContents(el); const sel = getSelection(); sel.removeAllRanges(); sel.addRange(r); document.execCommand('copy'); }
+    b.textContent = 'Copied ✓'; setTimeout(() => b.textContent = label, 1800);
+  };
+}
 </script>
 </body>
 </html>
