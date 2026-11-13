@@ -42,26 +42,27 @@ h1{font-size:clamp(34px,6vw,56px);line-height:1.06;font-weight:700;margin:12px 0
 .sound.is-on .on{display:inline}
 /* sections */
 section{padding:28px 0}
+#play{padding:48px 0 52px}
+#play .sub{margin-bottom:24px}
 h2{font:700 22px/28px var(--font-sans);margin:0 0 4px;letter-spacing:-.02em}
 .sub{color:var(--ink-muted);font-size:14px;line-height:22px;margin:0 0 16px}
-.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-.card{padding:8px;gap:0}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.card{padding:12px;gap:0}
 .card .cv{cursor:pointer;display:block;width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:8px;background:#000}
 .card .cv:focus-visible{outline:2px solid var(--accent-line);outline-offset:2px}
-.card .body{display:flex;flex-direction:column;gap:8px;flex:1;padding:12px 6px 6px}
+.card .body{display:flex;flex-direction:column;gap:10px;flex:1;padding:16px 6px 6px}
 .name{display:flex;align-items:center;gap:8px;font:600 16px/20px var(--font-sans);letter-spacing:-.01em}
 .name .bx-dot{width:9px;height:9px}
 .card p{margin:0;color:var(--ink-muted);font-size:13px;line-height:18px;flex:1}
 .card .acts{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px}
 .card .acts .bx-btn{height:34px;padding:0 8px}
 /* prompt */
-.pane{padding:20px}
 .phead{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:12px}
 .phead .sub{margin:0;flex:1 1 280px}
 .phead + .bx-code{margin-bottom:0}
 .followup{margin-top:24px}
 /* footer */
-footer{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin:16px 0 28px;padding:12px 12px 12px 16px;color:var(--ink-muted);font-size:13px}
+footer{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin:24px 0 0;padding:20px 0 32px;border-top:1px solid var(--hairline);color:var(--ink-muted);font-size:13px}
 .follow{display:flex;gap:8px;flex-wrap:wrap}
 .follow .bx-tile--sm{width:18px;height:18px;border-radius:5px;background:var(--ink);color:var(--wall-base);font:700 10px/1 var(--font-sans)}
 /* video player (the full 38 s tour of each scene) */
@@ -113,7 +114,6 @@ footer{display:flex;justify-content:space-between;align-items:center;gap:12px;fl
     <p class="lede">Sonnet 5.5, Opus 5.5 and Fable 5.2 each got the same prompt and built India Gate in 3D, in a single HTML file.</p>
     <div class="cta"><a class="bx-btn bx-btn--primary bx-btn--lg" href="#play">Play the scenes</a><a class="bx-btn bx-btn--lg" href="#prompt">Read the exact prompt</a><a class="bx-btn bx-btn--lg" href="https://x.com/_monisraza" target="_blank" rel="noopener">Follow for the next round</a></div>
   </div>
-  </div>
 
   <section id="play">
     <h2>Play them yourself</h2>
@@ -147,10 +147,9 @@ footer{display:flex;justify-content:space-between;align-items:center;gap:12px;fl
   </section>
 
   <section id="prompt">
-    <div class="pane bx-glass bx-glass--pane">
-      <h2>The prompt</h2>
-      <div class="phead"><p class="sub">Every model got exactly this, word for word.</p><button class="bx-btn" id="copyPrompt" type="button"><svg class="bx-icon"><use href="#i-copy"/></svg><span>Copy prompt</span></button></div>
-      <pre class="bx-code prompt" id="mainprompt">Create ONE self-contained index.html with an interactive 3D model of India Gate (New Delhi) using Three.js r160 via importmap from unpkg (use three/addons/ for OrbitControls, Sky, EffectComposer, RenderPass, UnrealBloomPass, OutputPass). Use only procedural geometry and canvas-generated textures, with no external assets. Output only the complete code in one block, no explanation.
+    <h2>The prompt</h2>
+    <div class="phead"><p class="sub">Every model got exactly this, word for word.</p><button class="bx-btn" id="copyPrompt" type="button"><svg class="bx-icon"><use href="#i-copy"/></svg><span>Copy prompt</span></button></div>
+    <pre class="bx-code prompt" id="mainprompt">Create ONE self-contained index.html with an interactive 3D model of India Gate (New Delhi) using Three.js r160 via importmap from unpkg (use three/addons/ for OrbitControls, Sky, EffectComposer, RenderPass, UnrealBloomPass, OutputPass). Use only procedural geometry and canvas-generated textures, with no external assets. Output only the complete code in one block, no explanation.
 
 CREATIVE BRIEF (this part is yours):
 Capture the real monument&#x27;s recognisable character: a tall sandstone memorial arch with a through-passage, stepped upper tiers, ornamental frieze, carved roundels, the &quot;INDIA&quot; inscription, and the domed canopy behind it. You choose the proportions, materials, textures, surrounding scenery, atmosphere, colour palette, animated details and any extra touches you think will look best. Make it look like a showpiece you&#x27;d be proud to post. Surprise me with the details.
@@ -177,8 +176,8 @@ Controls and rendering:
 - Handle window resize, and use lighter settings on small screens.
 
 QUALITY BAR: complete, no TODOs or placeholders, no console errors, and it runs when the file is opened directly in a browser.</pre>
-      <div class="phead followup"><p class="sub">The follow-up. Opus 5.5 and Fable 5.2 left out the Amar Jawan Jyoti, so both got this same follow-up, word for word.</p><button class="bx-btn" id="copyFollowup" type="button"><svg class="bx-icon"><use href="#i-copy"/></svg><span>Copy follow-up</span></button></div>
-      <pre class="bx-code prompt" id="followup">Here is the India Gate scene you built earlier (attached). Add the Amar Jawan Jyoti under the central arch:
+    <div class="phead followup"><p class="sub">The follow-up. Opus 5.5 and Fable 5.2 left out the Amar Jawan Jyoti, so both got this same follow-up, word for word.</p><button class="bx-btn" id="copyFollowup" type="button"><svg class="bx-icon"><use href="#i-copy"/></svg><span>Copy follow-up</span></button></div>
+    <pre class="bx-code prompt" id="followup">Here is the India Gate scene you built earlier (attached). Add the Amar Jawan Jyoti under the central arch:
 
 - a black marble cenotaph on a stepped plinth, centred in the arch passage, with "AMAR JAWAN" inscribed in gold on its sides
 - an L1A1 rifle standing upright with the barrel pointing down, and a soldier's helmet resting on its butt
@@ -187,10 +186,9 @@ QUALITY BAR: complete, no TODOs or placeholders, no console errors, and it runs 
 The flames should flicker and give off a warm light that falls on the cenotaph and the underside of the arch. Keep the glow subtle in daylight and stronger at night. It should look right in every existing lighting mode.
 
 Keep the scale true to the real monument relative to the arch. Do not change anything else in the scene: geometry, lighting modes, camera presets, controls and performance should all stay as they are. Return the complete updated single HTML file.</pre>
-    </div>
   </section>
 
-  <footer class="bx-glass">
+  <footer>
     <span>Made by monisraza · Claude</span>
     <span class="follow">
       <a class="bx-btn" href="https://www.linkedin.com/in/monisraza" target="_blank" rel="noopener"><span class="bx-tile bx-tile--sm">in</span>monisraza</a>
