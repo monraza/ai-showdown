@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -17,11 +17,9 @@
 <meta name="twitter:title" content="Same prompt. 3 Claude models. Which built India Gate best?">
 <meta name="twitter:description" content="Sonnet 5.5 vs Opus 5.5 vs Fable 5.2. Play all three 3D scenes in your browser.">
 <meta name="twitter:image" content="https://monraza.github.io/ai-showdown/india-gate/media/og.jpg">
-<meta name="theme-color" content="#eceff4" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#111317" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#111317">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230066d6'/%3E%3Cpath d='M18 48V24h28v24M27 48V37a5 5 0 0 1 10 0v11M15 18h34' fill='none' stroke='%23fff' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
 <link rel="stylesheet" href="../glass.css?v=1">
-<script src="../theme.js?v=1"></script>
 <style>
 .wrap{max-width:1080px;margin:0 auto;padding:0 16px}
 /* header: one glass bar */
@@ -62,8 +60,7 @@ h2{font:700 22px/28px var(--font-sans);margin:0 0 4px;letter-spacing:-.02em}
 .followup{margin-top:24px}
 /* footer */
 footer{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin:16px 0 28px;padding:12px 12px 12px 16px;color:var(--ink-muted);font-size:13px}
-.follow{display:flex;gap:8px;flex-wrap:wrap;margin-left:auto}
-.appearance{display:flex;align-items:center;gap:8px}
+.follow{display:flex;gap:8px;flex-wrap:wrap}
 .follow .bx-tile--sm{width:18px;height:18px;border-radius:5px;background:var(--ink);color:var(--wall-base);font:700 10px/1 var(--font-sans)}
 /* tour player */
 #tourDlg{width:min(1100px,94vw);max-height:94vh;padding:0;border:1px solid var(--edge);border-radius:18px;background:var(--glass-popover);color:var(--ink);box-shadow:var(--shadow-popover);-webkit-backdrop-filter:blur(var(--blur-popover)) saturate(180%);backdrop-filter:blur(var(--blur-popover)) saturate(180%);overflow:hidden}
@@ -76,7 +73,6 @@ footer{display:flex;justify-content:space-between;align-items:center;gap:12px;fl
   .hero{grid-template-columns:1fr;gap:28px;padding-top:32px;justify-items:center;text-align:center}
   .lede{margin-left:auto;margin-right:auto}
   .cta{display:grid;width:min(320px,100%);margin:0 auto}
-  footer{flex-direction:column;align-items:flex-start}.follow{margin-left:0}
   .grid{grid-template-columns:1fr}
   header.top nav .bx-btn{padding:0 10px}
 }
@@ -93,9 +89,6 @@ footer{display:flex;justify-content:space-between;align-items:center;gap:12px;fl
   <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
   <symbol id="i-mute" viewBox="0 0 24 24"><path d="M11 5L6 9H3v6h3l5 4zM22 9l-6 6M16 9l6 6"/></symbol>
   <symbol id="i-sound" viewBox="0 0 24 24"><path d="M11 5L6 9H3v6h3l5 4zM15.5 8.5a5 5 0 0 1 0 7M19 5a10 10 0 0 1 0 14"/></symbol>
-  <symbol id="i-system" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></symbol>
-  <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></symbol>
-  <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></symbol>
 </svg>
 <div class="wrap">
   <header class="top bx-glass">
@@ -200,13 +193,6 @@ Keep the scale true to the real monument relative to the arch. Do not change any
     <span class="follow">
       <a class="bx-btn" href="https://www.linkedin.com/in/monisraza" target="_blank" rel="noopener"><span class="bx-tile bx-tile--sm">in</span>monisraza</a>
       <a class="bx-btn" href="https://x.com/_monisraza" target="_blank" rel="noopener"><span class="bx-tile bx-tile--sm">X</span>@_monisraza</a>
-    </span>
-    <span class="appearance"><span class="bx-label" id="appLbl">Theme</span>
-      <div class="bx-segmented" data-appearance role="group" aria-labelledby="appLbl">
-          <button type="button" value="system" aria-label="Match system" title="Match system"><svg class="bx-icon"><use href="#i-system"/></svg></button>
-          <button type="button" value="light" aria-label="Light" title="Light"><svg class="bx-icon"><use href="#i-sun"/></svg></button>
-          <button type="button" value="dark" aria-label="Dark" title="Dark"><svg class="bx-icon"><use href="#i-moon"/></svg></button>
-      </div>
     </span>
   </footer>
 </div>

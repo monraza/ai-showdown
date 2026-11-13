@@ -1,6 +1,6 @@
 /* AI Showdown — Bird's-eye Glass design system.
    Tokens mirror the system's tokens.json; components keep its bx- class names.
-   Light by default, dark follows the OS, and data-theme on <html> pins either one. */
+   The site pins dark with data-theme="dark" on <html>; the light set is kept as the system's primary theme. */
 :root {
   color-scheme: light;
   --wall-base: #eceff4; --wall-tint-1: #d5e1f2; --wall-tint-2: #e4e0f0; --wall-tint-3: #cfe0e8;
