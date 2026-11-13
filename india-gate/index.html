@@ -46,7 +46,7 @@ h2{font-size:26px;margin:0 0 6px;letter-spacing:-.01em}
 .sub{color:var(--muted);margin:0 0 24px}
 .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
 .card{background:var(--panel);border:1px solid var(--line);border-radius:18px;overflow:hidden;display:flex;flex-direction:column}
-.card img{width:100%;aspect-ratio:4/5;object-fit:cover;display:block;background:#000}
+.card .cv{width:100%;aspect-ratio:4/5;object-fit:cover;display:block;background:#000}
 .card .body{padding:16px 18px 18px;display:flex;flex-direction:column;gap:10px;flex:1}
 .name{display:flex;align-items:center;gap:10px;font-weight:800;font-size:20px}
 .dot{width:12px;height:12px;border-radius:50%;flex:none}
@@ -61,7 +61,7 @@ footer{border-top:1px solid var(--line);padding:28px 0 40px;color:var(--muted);f
 @media (max-width:760px){
   .hero{grid-template-columns:1fr;gap:28px;padding-top:16px;justify-items:center;text-align:center}
   .lede{margin-left:auto;margin-right:auto}.cta{justify-content:center}
-  .grid{grid-template-columns:1fr}.card img{aspect-ratio:4/3;object-position:center 30%}
+  .grid{grid-template-columns:1fr}.card .cv{aspect-ratio:4/3;object-position:center 30%}
   header.top nav a:first-child{display:none}
 }
 </style>
@@ -92,7 +92,7 @@ footer{border-top:1px solid var(--line);padding:28px 0 40px;color:var(--muted);f
     <p class="sub">Drag to orbit, switch day, golden hour, night and tricolour lighting. Works on phones too.</p>
     <div class="grid">
       <article class="card">
-        <img src="media/card_sonnet.jpg" alt="Sonnet 5.5's India Gate lit in tricolour floodlights" loading="lazy">
+        <video class="cv" data-src="media/clip_sonnet.mp4" poster="media/card_sonnet.jpg" muted loop playsinline preload="none" aria-label="Preview of Sonnet 5.5's India Gate: day views, an aerial pass and its tricolour floodlights at night"></video>
         <div class="body">
           <div class="name"><span class="dot" style="background:var(--sonnet)"></span>Sonnet 5.5</div>
           <p>Tricolour floodlights on the gate, waving flags and flame sprites.</p>
@@ -100,7 +100,7 @@ footer{border-top:1px solid var(--line);padding:28px 0 40px;color:var(--muted);f
         </div>
       </article>
       <article class="card">
-        <img src="media/card_opus.jpg" alt="Opus 5.5's India Gate with sweeping tricolour searchlight beams" loading="lazy">
+        <video class="cv" data-src="media/clip_opus.mp4" poster="media/card_opus.jpg" muted loop playsinline preload="none" aria-label="Preview of Opus 5.5's India Gate: a walk through the arch to the canopy and its tricolour searchlight beams at night"></video>
         <div class="body">
           <div class="name"><span class="dot" style="background:var(--opus)"></span>Opus 5.5</div>
           <p>Sweeping searchlight beams and a flickering Amar Jawan Jyoti.</p>
@@ -108,7 +108,7 @@ footer{border-top:1px solid var(--line);padding:28px 0 40px;color:var(--muted);f
         </div>
       </article>
       <article class="card">
-        <img src="media/card_fable.jpg" alt="Fable 5.2's India Gate with fountains glowing saffron and green" loading="lazy">
+        <video class="cv" data-src="media/clip_fable.mp4" poster="media/card_fable.jpg" muted loop playsinline preload="none" aria-label="Preview of Fable 5.2's India Gate: the fountain pool, the arch vault and its tricolour fountains at night"></video>
         <div class="body">
           <div class="name"><span class="dot" style="background:var(--fable)"></span>Fable 5.2</div>
           <p>Fountains that glow saffron and green, with a day-to-night sky.</p>
@@ -162,6 +162,16 @@ QUALITY BAR: complete, no TODOs or placeholders, no console errors, and it runs 
 <script>
 const v = document.getElementById('hero'), s = document.getElementById('sound');
 s.onclick = () => { v.muted = !v.muted; if (!v.muted) { v.currentTime = 0; v.play(); } s.textContent = v.muted ? '🔇 Tap for sound' : '🔊 Sound on'; };
+/* card previews: load + play only while on screen; still poster if the viewer prefers reduced motion */
+const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const cards = document.querySelectorAll('video.cv');
+if (!still && 'IntersectionObserver' in window) {
+  const io = new IntersectionObserver(es => es.forEach(e => {
+    const v = e.target;
+    if (e.isIntersecting) { if (!v.src) v.src = v.dataset.src; v.play().catch(() => {}); } else if (v.src) v.pause();
+  }), { threshold: 0.35 });
+  cards.forEach(v => io.observe(v));
+}
 const cp = document.getElementById('copyPrompt');
 if (cp) cp.onclick = async () => {
   const txt = document.querySelector('.prompt').textContent;
