@@ -52,6 +52,10 @@ h2{font-size:26px;margin:0 0 6px;letter-spacing:-.01em}
 .dot{width:12px;height:12px;border-radius:50%;flex:none}
 .card p{margin:0;color:var(--muted);font-size:15px;flex:1}
 .card .btn{justify-content:center}
+.ttabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.ttabs button{display:inline-flex;align-items:center;gap:8px;padding:10px 16px;border-radius:999px;border:1px solid var(--line);background:var(--panel);color:var(--muted);font-family:inherit;font-weight:700;font-size:15px;cursor:pointer}
+.ttabs button[aria-selected=true]{color:var(--text);border-color:var(--text)}
+.tour{width:100%;aspect-ratio:16/9;display:block;background:#000;border-radius:14px;border:1px solid var(--line)}
 .prompt{background:var(--panel);border:1px solid var(--line);border-left:4px solid var(--saffron);border-radius:12px;padding:18px 20px;white-space:pre-wrap;font:14px/1.65 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;margin:0;overflow-wrap:anywhere;max-height:none}
 .phead{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:16px}
 .phead .sub{margin:0}
@@ -118,6 +122,17 @@ footer{border-top:1px solid var(--line);padding:28px 0 40px;color:var(--muted);f
     </div>
   </section>
 
+  <section id="tours">
+    <h2>Watch the tours</h2>
+    <p class="sub">Each model's scene on its own: its camera presets, all four lighting modes and its signature moment.</p>
+    <div class="ttabs" role="tablist" aria-label="Choose a tour">
+      <button role="tab" data-m="sonnet" aria-selected="true"><span class="dot" style="background:var(--sonnet)"></span>Sonnet 5.5</button>
+      <button role="tab" data-m="opus" aria-selected="false"><span class="dot" style="background:var(--opus)"></span>Opus 5.5</button>
+      <button role="tab" data-m="fable" aria-selected="false"><span class="dot" style="background:var(--fable)"></span>Fable 5.2</button>
+    </div>
+    <video id="tour" class="tour" controls playsinline preload="none" poster="media/tour_sonnet.jpg" src="media/tour_sonnet.mp4" aria-label="Sonnet 5.5 India Gate tour, 38 seconds"></video>
+  </section>
+
   <section id="prompt">
     <h2>The prompt</h2>
     <div class="phead"><p class="sub">Every model got exactly this, word for word.</p><button class="btn" id="copyPrompt" type="button">Copy prompt</button></div>
@@ -172,6 +187,16 @@ if (!still && 'IntersectionObserver' in window) {
   }), { threshold: 0.35 });
   cards.forEach(v => io.observe(v));
 }
+/* tours: one player, three sources; switching stops the current one and frees its buffer */
+const TOUR = { sonnet: 'Sonnet 5.5', opus: 'Opus 5.5', fable: 'Fable 5.2' }, tv = document.getElementById('tour');
+document.querySelectorAll('.ttabs button').forEach(b => b.onclick = () => {
+  const m = b.dataset.m, playing = !tv.paused;
+  document.querySelectorAll('.ttabs button').forEach(x => x.setAttribute('aria-selected', x === b));
+  tv.pause(); tv.removeAttribute('src'); tv.load();
+  tv.poster = 'media/tour_' + m + '.jpg'; tv.src = 'media/tour_' + m + '.mp4';
+  tv.setAttribute('aria-label', TOUR[m] + ' India Gate tour, 38 seconds');
+  if (playing) tv.play().catch(() => {});
+});
 const cp = document.getElementById('copyPrompt');
 if (cp) cp.onclick = async () => {
   const txt = document.querySelector('.prompt').textContent;
