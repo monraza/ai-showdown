@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Play · India Gate AI Showdown</title>
+<meta name="description" content="Play the India Gate 3D scenes built by Claude Sonnet 5.5, Opus 5.5 and Fable 5.2 from the same prompt.">
+<meta property="og:title" content="Same prompt. 3 Claude models. Which built India Gate best?">
+<meta property="og:image" content="https://monraza.github.io/ai-showdown/india-gate/media/og.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://monraza.github.io/ai-showdown/india-gate/media/og.jpg">
+<meta name="theme-color" content="#0b0d12">
+<style>
+:root{--bg:#0b0d12;--line:#232a36;--text:#f2efe6;--muted:#a3a9b6;--sonnet:#38c9b4;--opus:#ff9933;--fable:#a58bff}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--text);font:600 14px/1 system-ui,-apple-system,"Segoe UI",Roboto,"Ubuntu Sans",sans-serif;overflow:hidden}
+.bar{height:52px;display:flex;align-items:center;gap:8px;padding:0 10px;padding-top:env(safe-area-inset-top);border-bottom:1px solid var(--line)}
+.bar a{color:inherit;text-decoration:none}
+.back{flex:none;padding:9px 12px;border-radius:999px;border:1px solid var(--line);color:var(--muted)}
+.tabs{flex:1;display:flex;justify-content:center;gap:4px;min-width:0}
+.tabs a{display:flex;align-items:center;gap:7px;padding:9px 11px;border-radius:999px;color:var(--muted);white-space:nowrap}
+.tabs a .d{width:9px;height:9px;border-radius:50%}
+.tabs a[aria-current]{background:#1b212c;color:var(--text);box-shadow:inset 0 0 0 1px var(--c)}
+iframe{display:block;width:100%;height:calc(100% - 52px);border:0;background:#000}
+@media (max-width:420px){.back span,.tabs a .v{display:none}.tabs a{padding:9px 9px}.bar{gap:6px;padding:0 8px}}
+</style>
+</head>
+<body>
+<div class="bar">
+  <a class="back" href="./" aria-label="Back to all three">←<span> All 3</span></a>
+  <nav class="tabs" aria-label="Choose model">
+    <a href="?m=sonnet" data-m="sonnet" style="--c:var(--sonnet)"><span class="d" style="background:var(--sonnet)"></span>Sonnet<span class="v"> 5.5</span></a>
+    <a href="?m=opus" data-m="opus" style="--c:var(--opus)"><span class="d" style="background:var(--opus)"></span>Opus<span class="v"> 5.5</span></a>
+    <a href="?m=fable" data-m="fable" style="--c:var(--fable)"><span class="d" style="background:var(--fable)"></span>Fable<span class="v"> 5.2</span></a>
+  </nav>
+</div>
+<iframe id="scene" title="3D scene" allow="fullscreen; autoplay" allowfullscreen></iframe>
+<script>
+const NAMES = { sonnet: 'Sonnet 5.5', opus: 'Opus 5.5', fable: 'Fable 5.2' };
+function show(m, push) {
+  if (!NAMES[m]) m = 'sonnet';
+  document.getElementById('scene').src = m + '/';
+  document.querySelectorAll('.tabs a').forEach(a => a.toggleAttribute('aria-current', a.dataset.m === m));
+  document.title = NAMES[m] + ' · India Gate AI Showdown';
+  if (push) history.pushState({ m }, '', '?m=' + m);
+}
+document.querySelectorAll('.tabs a').forEach(a => a.onclick = e => { e.preventDefault(); show(a.dataset.m, true); });
+addEventListener('popstate', () => show(new URLSearchParams(location.search).get('m')));
+show(new URLSearchParams(location.search).get('m'));
+document.getElementById('scene').addEventListener('load', () => { try { document.getElementById('scene').contentWindow.focus(); } catch (e) {} });
+</script>
+</body>
+</html>
