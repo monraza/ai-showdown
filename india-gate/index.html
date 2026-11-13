@@ -23,10 +23,12 @@
 <style>
 .wrap{max-width:1080px;margin:0 auto;padding:0 16px}
 /* header: one glass bar */
-header.top{margin:12px 0 0;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 8px 8px 10px;background:var(--glass-popover)}
+/* header: hidden when the page opens; slides in when the visitor scrolls up, out again when they scroll down */
+header.top{position:fixed;z-index:5;top:12px;left:50%;width:min(1048px,calc(100% - 32px));transform:translate(-50%,calc(-100% - 16px));transition:transform .25s ease;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 8px 8px 10px;background:var(--glass-popover)}
 .brand{display:flex;align-items:center;gap:10px;min-width:0;color:var(--ink);text-decoration:none;font:600 15px/20px var(--font-sans);letter-spacing:-.01em}
 .brand span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 header.top nav{display:flex;align-items:center;gap:4px}
+header.top.shown,header.top:focus-within{transform:translate(-50%,0)}
 /* hero */
 .hero{display:grid;grid-template-columns:1fr auto;grid-template-rows:1fr auto auto auto auto 1fr;grid-template-areas:". phone" "label phone" "title phone" "lede phone" "cta phone" ". phone";column-gap:48px;padding:56px 0 44px}
 .hero .bx-label{grid-area:label}.hero h1{grid-area:title}.hero .phone{grid-area:phone;align-self:center}.hero .lede{grid-area:lede}.hero .cta{grid-area:cta}
@@ -230,6 +232,21 @@ for (const [id, pre] of [['copyPrompt', '#mainprompt']]) {
     setTimeout(() => { t.textContent = label; use.setAttribute('href', '#i-copy'); }, 1800);
   };
 }
+/* header reveal: show on scroll up, hide on scroll down (small moves ignored, iOS bounce ignored) */
+(() => {
+  const h = document.querySelector('header.top');
+  let last = Math.max(0, scrollY), ticking = false;
+  addEventListener('scroll', () => {
+    if (ticking) return; ticking = true;
+    requestAnimationFrame(() => {
+      ticking = false;
+      const y = Math.max(0, scrollY), d = y - last;
+      if (Math.abs(d) < 6) return;
+      h.classList.toggle('shown', d < 0);
+      last = y;
+    });
+  }, { passive: true });
+})();
 </script>
 </body>
 </html>
