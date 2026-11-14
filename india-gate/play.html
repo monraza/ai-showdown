@@ -111,11 +111,52 @@ function release(f) {
     }
   } catch (e) {}
   try { f.src = 'about:blank'; } catch (e) {}
+  if (f.__url) URL.revokeObjectURL(f.__url);
   f.remove();
 }
 
 const nextFrame = () => new Promise(r => requestAnimationFrame(() => r()));
 const wait = ms => new Promise(r => setTimeout(r, ms));
+
+/* Scene files are not served as plain HTML. Each is packed as <m>/scene.dat (XOR with this key;
+   production/scripts/pack_scenes.py) and unpacked here in memory into a blob URL. The unpacked bytes are the
+   scene file exactly as the model wrote it. It only discourages saving: a determined visitor can still get it. */
+const SCENE_KEY = '5a6dd2336f69f7f8a21b64a22fa649c3688d7335d080987a';
+async function sceneUrl(m) {
+  const res = await fetch(m + '/scene.dat?v=2');
+  if (!res.ok) throw new Error(res.status);
+  const b = new Uint8Array(await res.arrayBuffer());
+  const k = SCENE_KEY.match(/../g).map(h => parseInt(h, 16));
+  for (let i = 0; i < b.length; i++) b[i] ^= k[i % k.length];
+  return URL.createObjectURL(new Blob([b], { type: 'text/html' }));
+}
+/* no Save (Ctrl/Cmd+S), View source (Ctrl/Cmd+U) or right-click menu on the 3D page or inside the scene */
+const guardKeys = e => { const k = (e.key || '').toLowerCase(); if ((e.ctrlKey || e.metaKey) && (k === 's' || k === 'u')) { e.preventDefault(); e.stopPropagation(); } };
+const noMenu = e => e.preventDefault();
+addEventListener('keydown', guardKeys, true);
+stage.addEventListener('contextmenu', noMenu);
+function guard(d) {
+  if (d.__igGuard) return; d.__igGuard = true;
+  d.addEventListener('keydown', guardKeys, true);
+  d.addEventListener('contextmenu', noMenu, true);
+}
+/* Once a scene is running (its own loader marked done), drop its <script> tags: the code is already in memory,
+   so a saved copy of the page gets none of it. */
+function protect(f) {
+  const t0 = performance.now();
+  const tick = () => {
+    if (f !== frame) return;
+    try {
+      const d = f.contentDocument;
+      if (d && d.documentElement && d.URL === f.__url) {
+        guard(d);
+        if (d.querySelector('#loader.done,#veil.gone')) { d.querySelectorAll('script').forEach(s => s.remove()); return; }
+      }
+    } catch (e) { return; }
+    if (performance.now() - t0 < 60000) requestAnimationFrame(tick);
+  };
+  requestAnimationFrame(tick);
+}
 
 async function show(m, push) {
   if (!NAMES[m]) m = 'sonnet';
@@ -128,19 +169,24 @@ async function show(m, push) {
   loading.textContent = 'Loading ' + NAMES[m] + '…'; loading.classList.remove('off');
   await nextFrame(); await nextFrame(); await wait(150);       // let the browser reclaim the old scene first
   if (my !== token) return;                                    // a newer click won
+  let url;
+  try { url = await sceneUrl(m); }
+  catch (e) { if (my === token) loading.textContent = 'Could not load ' + NAMES[m] + '. Please refresh the page.'; return; }
+  if (my !== token) { URL.revokeObjectURL(url); return; }
   const f = document.createElement('iframe');
   f.title = NAMES[m] + ' 3D scene'; f.allow = 'fullscreen; autoplay'; f.allowFullscreen = true;
   f.addEventListener('load', () => { if (f !== frame) return; applyMin(f); loading.classList.add('off'); try { f.contentWindow.focus(); } catch (e) {} });
-  f.src = m + '/';
+  f.__url = url; f.src = url;
   stage.appendChild(f); frame = f;
   dayFirst(f, m);
+  protect(f);
   /* hide the panels as soon as the scene's document exists, not only at load. The check runs just before
      every frame is drawn (the iframe shares this page's rendering), so the panels are never painted on phones. */
   const early = () => {
     if (f !== frame) return;
     try {
       const d = f.contentDocument;
-      if (d && d.documentElement && d.URL.indexOf('/' + m + '/') !== -1) { applyMin(f); if (d.readyState === 'complete') return; }
+      if (d && d.documentElement && d.URL === f.__url) { applyMin(f); if (d.readyState === 'complete') return; }
     } catch (e) { return; }
     requestAnimationFrame(early);
   };
@@ -165,7 +211,7 @@ function dayFirst(f, m) {
     if (f !== frame) return;
     try {
       const w = f.contentWindow, d = f.contentDocument;
-      if (d && d.documentElement && d.URL.indexOf('/' + m + '/') !== -1) {
+      if (d && d.documentElement && d.URL === f.__url) {
         if (!hold) { hold = d.createElement('style'); hold.id = 'ig-hold'; hold.textContent = HOLD_CSS; (d.head || d.documentElement).appendChild(hold); }
         if (day.ready(d)) {
           let ms = 0, frames = 2; try { [ms, frames] = day.go(w, d); } catch (e) {}
