@@ -1009,8 +1009,8 @@ function applyLook(L) {
   jyotiGlowMat.opacity = 0.08 + 0.5 * jyotiLevel;
   jyotiFlames.forEach(f => f.material.color.setScalar(1.0 + 1.5 * jyotiLevel));
 }
-const look = cloneLook(LOOKS.golden);
-let lookFrom = null, lookTo = null, lookT = 1, lookName = 'golden';
+const look = cloneLook(LOOKS.day);
+let lookFrom = null, lookTo = null, lookT = 1, lookName = 'day';
 const lookBtns = [...document.querySelectorAll('[data-look]')];
 function setLook(name) {
   if (!LOOKS[name]) return;
