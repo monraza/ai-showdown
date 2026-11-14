@@ -68,7 +68,6 @@
 .ig-pill.done .acts{display:none}
 .ig-pill.done{padding-right:16px}
 .ig-pill.out{transform:translateY(calc(100% + 24px)) scale(.9);opacity:0}
-@media (max-width:420px){.ig-pill .q .more{display:none}}
 @media (prefers-reduced-motion:reduce){.ig-pill .ic .bar{animation:none}}
 [data-analytics-settings]{background:none;border:0;padding:0;color:inherit;font:inherit;text-decoration:underline;text-underline-offset:2px;cursor:pointer}
 [data-analytics-settings]::before{content:"·";display:inline-block;margin:0 .45em;text-decoration:none}`;
@@ -80,11 +79,11 @@
   function showPill() {
     if (pill) { pill.classList.remove('tucked'); return; }
     pill = document.createElement('div');
-    pill.className = 'ig-pill'; pill.setAttribute('role', 'region'); pill.setAttribute('aria-label', 'Analytics choice');
+    pill.className = 'ig-pill'; pill.setAttribute('role', 'region'); pill.setAttribute('aria-label', 'Allow Google Analytics cookies, used to count visits?');
     pill.innerHTML =
       '<button class="ic" type="button" aria-label="Show or hide the analytics choice"><svg viewBox="0 0 24 24" aria-hidden="true">' +
       '<path class="bar" d="M6 20V12"/><path class="bar" d="M12 20V5"/><path class="bar" d="M18 20V9"/></svg></button>' +
-      '<span class="q"><b>Count your visit?</b><span class="more"> Uses analytics cookies.</span></span>' +
+      '<span class="q" title="Google Analytics cookies, used to count visits"><b>Cookies?</b></span>' +
       '<span class="acts"><button type="button" data-c="granted">Allow</button><button type="button" data-c="denied">No thanks</button></span>';
     pill.addEventListener('click', e => {
       if (e.target.closest('.ic')) { pill && pill.classList.toggle('tucked'); return; }
