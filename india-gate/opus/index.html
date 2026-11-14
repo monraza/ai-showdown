@@ -123,7 +123,7 @@
     <div class="tri"><span></span><span></span><span></span></div>
     <p>All India War Memorial · New Delhi</p>
     <p class="coords">28.6129° N · 77.2295° E · 1931</p>
-    <div class="mode"><span id="modeDot"></span><span id="modeLabel">Golden hour</span></div>
+    <div class="mode"><span id="modeDot"></span><span id="modeLabel">Day</span></div>
   </div>
 
   <div id="hint" class="glass">
@@ -1830,8 +1830,8 @@ const MODES = {
 const MODE_LABEL = { day: 'Day', golden: 'Golden hour', night: 'Night', tri: 'Tricolour' };
 const MODE_DOT = { day: '#ffe08a', golden: '#FF9933', night: '#9db8ff', tri: '#FF9933' };
 const clone = o => { const r = {}; for (const k in o) r[k] = o[k].isColor ? o[k].clone() : o[k]; return r; };
-const cur = clone(MODES.golden);
-let fromP = null, toP = null, mStart = 0, currentMode = 'golden';
+const cur = clone(MODES.day);
+let fromP = null, toP = null, mStart = 0, currentMode = 'day';
 const MDUR = 2.4;
 const sunV = new THREE.Vector3(), keyV = new THREE.Vector3(), tmpC = new THREE.Color();
 function setMode(name) {
@@ -2055,7 +2055,7 @@ function animate() {
 }
 
 // intro
-setMode('golden'); toP = null; Object.assign(cur, clone(MODES.golden));
+setMode('day'); toP = null; Object.assign(cur, clone(MODES.day));
 setAutoOrbit(true);
 applyMode();
 renderer.shadowMap.needsUpdate = true;

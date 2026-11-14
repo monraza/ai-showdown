@@ -147,21 +147,18 @@ async function show(m, push) {
   requestAnimationFrame(early);
 }
 
-/* Day first. All three scenes start in golden hour, and that choice lives in their own code, which is never changed.
-   Instead, when a scene finishes loading, this page presses the scene's own Day control, the same as a visitor would,
-   and keeps the scene's own loading screen up until the light has settled, so golden hour is never seen.
-   Sonnet exposes its controls (window.__app.setMode) with an instant switch; Opus and Fable only have their buttons,
-   which fade the light over 2.4 s, so their loading screen is held a little longer. Fable steps its fade per frame
-   (at most 0.05 s a step), so it also needs 48+ frames: on a slow phone that takes longer than 2.4 s.
-   The hold only applies once a scene marks its loader done, so a scene's own error message is never hidden. */
-const HOLD_CSS = '#loader.done,#veil.gone{opacity:1!important;visibility:visible!important}';
+/* Day first. Opus and Fable start in day by themselves (their v3 files, re-prompted). Sonnet starts in golden hour,
+   and that choice lives in its own code, which is never changed. Instead, when Sonnet finishes loading, this page
+   switches it to day through the controls it exposes (window.__app.setMode, instant), while the scene's own loading
+   screen is held for two frames, so golden hour is never seen.
+   The hold only applies once the scene marks its loader done, so its own error message is never hidden. */
+const HOLD_CSS = '#loader.done{opacity:1!important;visibility:visible!important}';
 const DAY = {
   sonnet: { ready: d => d.querySelector('#loader.done'), go: w => { w.__app.setMode('day', { instant: true, silent: true }); return [0, 2]; } },
-  opus:   { ready: d => d.querySelector('#loader.done'), go: (w, d) => { d.querySelector('#lightGroup [data-mode="day"]').click(); return [2500, 2]; } },
-  fable:  { ready: d => d.querySelector('#veil.gone'),   go: (w, d) => { d.querySelector('[data-look="day"]').click(); return [2500, 52]; } },
 };
 function dayFirst(f, m) {
   const day = DAY[m], t0 = performance.now();
+  if (!day) return;   // the scene already starts in day
   let hold = null;
   const release = () => { try { hold && hold.remove(); } catch (e) {} };
   const tick = () => {
